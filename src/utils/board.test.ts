@@ -1,26 +1,23 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Board, BoardCell, generatePawn } from '.';
-import { PawnType, Player } from '@/types';
+import { BaseBoard, Board, BoardCell, generatePawn } from '.';
+import { BoardSize, PawnType, Player } from '@/types';
 
-const maxRow = 6;
-const maxCol = 6;
-
-describe('Board', () => {
+describe('BaseBoard', () => {
   describe('constructor', () => {
-    let board: Board;
+    let board: BaseBoard;
 
     beforeEach(() => {
-      board = new Board(maxRow, maxCol);
+      board = new BaseBoard(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should initialize the board state correctly', () => {
-      expect(board.state.length).toBe(maxRow);
+      expect(board.state.length).toBe(BoardSize.Rows);
       board.state.forEach((_, row) => {
-        expect(board.state[row].length).toBe(maxCol);
+        expect(board.state[row].length).toBe(BoardSize.Rows);
       });
 
-      Array.from({ length: maxRow }).forEach((_, row) =>
-        Array.from({ length: maxCol }).forEach((_, col) => {
+      Array.from({ length: BoardSize.Rows }).forEach((_, row) =>
+        Array.from({ length: BoardSize.Rows }).forEach((_, col) => {
           expect(board.getCell(row, col)).toBeTruthy();
           expect(board.getCell(row, col) instanceof BoardCell).toBe(true);
           expect(board.getCell(row, col)?.row).toBe(row);
@@ -31,10 +28,10 @@ describe('Board', () => {
   });
 
   describe('isCoordinateOutOfBoundaries', () => {
-    let board: Board;
+    let board: BaseBoard;
 
     beforeEach(() => {
-      board = new Board(maxRow, maxCol);
+      board = new BaseBoard(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should return TRUE if the coordinates provided are out of bounds', () => {
@@ -47,10 +44,10 @@ describe('Board', () => {
   });
 
   describe('getTargetPawnNewCoordinates', () => {
-    let board: Board;
+    let board: BaseBoard;
 
     beforeEach(() => {
-      board = new Board(maxRow, maxCol);
+      board = new BaseBoard(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should return a new coordinate in the N axis', () => {
@@ -101,18 +98,14 @@ describe('Board', () => {
       ]);
     });
   });
+});
 
+describe('Board', () => {
   describe('canPawnBoop', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(maxRow, maxCol);
-    });
-
-    it('Should return FALSE the coordinates provided are out of the board boundaries', () => {
-      board.getCell(1, 1)!.pawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
-
-      expect(board.canPawnBoop(maxRow + 1, maxCol + 1, 'N', Player.PlayerOne)).toBe(false);
+      board = new Board(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should return FALSE when there are no other pawn around the target cell', () => {
@@ -148,13 +141,15 @@ describe('Board', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(maxRow, maxCol);
+      board = new Board(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should return FALSE the coordinates provided are out of the board boundaries', () => {
       board.getCell(1, 1)!.pawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
 
-      expect(board.canPawnsBePromoted(maxRow + 1, maxCol + 1, 'N', Player.PlayerOne)).toBe(false);
+      expect(
+        board.canPawnsBePromoted(BoardSize.Rows + 1, BoardSize.Cols + 1, 'N', Player.PlayerOne),
+      ).toBe(false);
     });
 
     it('Should return FALSE if there are no 3 Kitten pawns belonging to the same player in the same line', () => {
@@ -193,13 +188,15 @@ describe('Board', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(maxRow, maxCol);
+      board = new Board(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should return FALSE the coordinates provided are out of the board boundaries', () => {
       board.getCell(1, 1)!.pawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
 
-      expect(board.hasPlayerWon(maxRow + 1, maxCol + 1, 'N', Player.PlayerOne)).toBe(false);
+      expect(
+        board.hasPlayerWon(BoardSize.Rows + 1, BoardSize.Cols + 1, 'N', Player.PlayerOne),
+      ).toBe(false);
     });
 
     it('Should return FALSE if there are no 3 pawns belonging to the same player in the same line', () => {
@@ -231,6 +228,27 @@ describe('Board', () => {
       board.getCell(3, 1)!.pawn = generatePawn(Player.PlayerOne, PawnType.Cat);
 
       expect(board.hasPlayerWon(1, 1, 'S', Player.PlayerOne)).toBe(true);
+    });
+  });
+
+  describe('boopPawn', () => {
+    let board: Board;
+
+    beforeEach(() => {
+      board = new Board(BoardSize.Rows, BoardSize.Rows);
+    });
+
+    it('Should boop the pawn and update the board correctly', () => {
+      const playerOnePawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
+      const playerTwoPawn = generatePawn(Player.PlayerTwo, PawnType.Kitten);
+      board.getCell(1, 1)!.pawn = playerOnePawn;
+      board.getCell(2, 1)!.pawn = playerTwoPawn;
+
+      board.boopPawn(1, 1, 'S', Player.PlayerOne);
+
+      expect(board.getCell(1, 1)!.pawn).toStrictEqual(playerOnePawn);
+      expect(board.getCell(2, 1)!.pawn).toStrictEqual(null);
+      expect(board.getCell(3, 1)!.pawn).toStrictEqual(playerTwoPawn);
     });
   });
 });

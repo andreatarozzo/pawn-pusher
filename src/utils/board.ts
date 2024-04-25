@@ -3,12 +3,13 @@ import {
   Direction,
   DirectionAdjustment,
   DirectionKey,
+  IBaseBoard,
   PawnType,
   Player,
 } from '@/types';
 import { BoardCell } from '.';
 
-export class Board {
+export class BaseBoard implements IBaseBoard {
   readonly state: BoardState;
   readonly directionAdjustments: DirectionAdjustment = {
     N: [-1, 0],
@@ -42,6 +43,24 @@ export class Board {
   getCell(row: number, col: number): BoardCell | null {
     return !this.isCoordinateOutOfBoundaries(row, col) ? this.state[row][col] : null;
   }
+}
+
+export class Board extends BaseBoard {
+  constructor(maxRows: number, maxCols: number) {
+    super(maxRows, maxCols);
+  }
+
+  isCoordinateOutOfBoundaries(row: number, col: number): boolean {
+    return row < 0 || row >= this.state.length || col < 0 || col >= this.state[0].length;
+  }
+
+  getAdjustedCoordinates(currentRow: number, currentCol: number, direction: Direction): number[] {
+    return [currentRow + direction[0], currentCol + direction[1]];
+  }
+
+  getCell(row: number, col: number): BoardCell | null {
+    return !this.isCoordinateOutOfBoundaries(row, col) ? this.state[row][col] : null;
+  }
 
   canPawnBoop(
     pawnRow: number,
@@ -49,14 +68,12 @@ export class Board {
     directionKey: DirectionKey,
     currentPlayer: Player,
   ): boolean {
-    if (!this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
-
     const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
     return Boolean(
       neighbor &&
         neighbor.pawn &&
         neighbor.pawn.player !== currentPlayer &&
-        !neighbor?.getNeighbor(directionKey)?.pawn,
+        (!neighbor?.getNeighbor(directionKey) || !neighbor.getNeighbor(directionKey)?.pawn),
     );
   }
 
@@ -66,8 +83,7 @@ export class Board {
     directionKey: DirectionKey,
     currentPlayer: Player,
   ): boolean {
-    if (!this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
-
+    if (this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
     const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
     const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
     return Boolean(
@@ -86,7 +102,7 @@ export class Board {
     directionKey: DirectionKey,
     currentPlayer: Player,
   ): boolean {
-    if (!this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
+    if (this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
 
     const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
     const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
@@ -99,8 +115,27 @@ export class Board {
         cellBehindNeighbor.pawn?.type === PawnType.Cat,
     );
   }
-}
 
-export const Boop = (boardState: BoardState, placedPawnRow: number, placedPawnCol: number) => {};
+  boopPawn(
+    newPawnRow: number,
+    newPawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ) {
+    if (this.canPawnBoop(newPawnRow, newPawnCol, directionKey, currentPlayer)) {
+      const neighbor = this.getCell(newPawnRow, newPawnCol)!.getNeighbor(directionKey);
+      const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
+
+      // Check if booped pawn will fall off board;
+      if (cellBehindNeighbor) {
+        this.state[cellBehindNeighbor.row!][cellBehindNeighbor.col!].pawn = JSON.parse(
+          JSON.stringify(neighbor?.pawn!),
+        );
+      }
+
+      this.state[neighbor?.row!][neighbor?.col!].pawn = null;
+    }
+  }
+}
 
 export const PromoteKittens = (boardState: BoardState) => {};

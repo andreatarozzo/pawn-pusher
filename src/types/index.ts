@@ -1,8 +1,20 @@
 import { BoardCell } from '@/utils';
 
 export enum BoardSize {
-  X = 6,
-  Y = 6,
+  Rows = 6,
+  Cols = 6,
+}
+
+export interface IBaseBoard {
+  readonly state: BoardState;
+  readonly directionAdjustments: DirectionAdjustment;
+  isCoordinateOutOfBoundaries: (row: number, col: number) => boolean;
+  getAdjustedCoordinates: (
+    currentRow: number,
+    currentCol: number,
+    direction: Direction,
+  ) => number[];
+  getCell: (row: number, col: number) => BoardCell | null;
 }
 
 export type BoardState = Array<Array<BoardCell>>;

@@ -1,5 +1,5 @@
 import { DirectionKey, IBoardCell, NeighborCells, Pawn } from '@/types';
-import { Board } from './board';
+import { BaseBoard } from '.';
 
 export class BoardCell implements IBoardCell {
   readonly neighbors: NeighborCells = {
@@ -29,7 +29,7 @@ export class BoardCell implements IBoardCell {
     this.neighbors[directionKey] = boardCell;
   }
 
-  init(board: Board) {
+  init(board: BaseBoard) {
     Object.entries(board.directionAdjustments).forEach(([directionKey, directionAdjustment]) => {
       const [newRow, newCol] = board.getAdjustedCoordinates(
         this.row,
