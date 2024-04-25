@@ -49,6 +49,8 @@ export class Board {
     directionKey: DirectionKey,
     currentPlayer: Player,
   ): boolean {
+    if (!this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
+
     const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
     return Boolean(
       neighbor &&
@@ -64,6 +66,8 @@ export class Board {
     directionKey: DirectionKey,
     currentPlayer: Player,
   ): boolean {
+    if (!this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
+
     const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
     const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
     return Boolean(
@@ -82,6 +86,8 @@ export class Board {
     directionKey: DirectionKey,
     currentPlayer: Player,
   ): boolean {
+    if (!this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
+
     const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
     const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
     return Boolean(
