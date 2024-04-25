@@ -1,17 +1,13 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Board, BoardCell } from '.';
-import { Pawn, PawnType, Player } from '@/types';
+import { Board, BoardCell, generatePawn } from '.';
+import { PawnType, Player } from '@/types';
 
-const generatePawn = (player: Player, type: PawnType): Pawn => ({
-  player,
-  type,
-});
+const maxRow = 6;
+const maxCol = 6;
 
 describe('Board', () => {
   describe('constructor', () => {
     let board: Board;
-    let maxRow = 6;
-    let maxCol = 6;
 
     beforeEach(() => {
       board = new Board(maxRow, maxCol);
@@ -38,7 +34,7 @@ describe('Board', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(6, 6);
+      board = new Board(maxRow, maxCol);
     });
 
     it('Should return TRUE if the coordinates provided are out of bounds', () => {
@@ -54,7 +50,7 @@ describe('Board', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(6, 6);
+      board = new Board(maxRow, maxCol);
     });
 
     it('Should return a new coordinate in the N axis', () => {
@@ -110,7 +106,7 @@ describe('Board', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(6, 6);
+      board = new Board(maxRow, maxCol);
     });
 
     it('Should return FALSE when there are no other pawn around the target cell', () => {
@@ -146,7 +142,7 @@ describe('Board', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(6, 6);
+      board = new Board(maxRow, maxCol);
     });
 
     it('Should return FALSE if there are no 3 Kitten pawns belonging to the same player in the same line', () => {
@@ -185,7 +181,7 @@ describe('Board', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(6, 6);
+      board = new Board(maxRow, maxCol);
     });
 
     it('Should return FALSE if there are no 3 pawns belonging to the same player in the same line', () => {
