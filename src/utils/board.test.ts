@@ -238,17 +238,64 @@ describe('Board', () => {
       board = new Board(BoardSize.Rows, BoardSize.Rows);
     });
 
+    it('Should do nothing if the condition to boop a neighbor pawn are not met', () => {
+      const playerOnePawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
+      board.getCell(1, 1)!.pawn = playerOnePawn;
+      board.getCell(2, 1)!.pawn = playerOnePawn;
+
+      const result = board.boopPawn(1, 1, 'S', Player.PlayerOne);
+
+      expect(result).toBe(false);
+      expect(board.getCell(1, 1)!.pawn).toStrictEqual(playerOnePawn);
+      expect(board.getCell(2, 1)!.pawn).toStrictEqual(playerOnePawn);
+    });
+
     it('Should boop the pawn and update the board correctly', () => {
       const playerOnePawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
       const playerTwoPawn = generatePawn(Player.PlayerTwo, PawnType.Kitten);
       board.getCell(1, 1)!.pawn = playerOnePawn;
       board.getCell(2, 1)!.pawn = playerTwoPawn;
 
-      board.boopPawn(1, 1, 'S', Player.PlayerOne);
+      const result = board.boopPawn(1, 1, 'S', Player.PlayerOne);
 
+      expect(result).toBe(true);
       expect(board.getCell(1, 1)!.pawn).toStrictEqual(playerOnePawn);
       expect(board.getCell(2, 1)!.pawn).toStrictEqual(null);
       expect(board.getCell(3, 1)!.pawn).toStrictEqual(playerTwoPawn);
+    });
+  });
+
+  describe('promoteKittens', () => {
+    let board: Board;
+
+    beforeEach(() => {
+      board = new Board(BoardSize.Rows, BoardSize.Rows);
+    });
+
+    it('Should do nothing if the condition for a promotion are not met', () => {
+      const playerOnePawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
+      board.getCell(0, 1)!.pawn = playerOnePawn;
+      board.getCell(1, 1)!.pawn = playerOnePawn;
+
+      const result = board.promoteKittens(0, 1, 'S', Player.PlayerOne);
+
+      expect(result).toBe(false);
+      expect(board.getCell(0, 1)?.pawn).toStrictEqual(playerOnePawn);
+      expect(board.getCell(1, 1)?.pawn).toStrictEqual(playerOnePawn);
+    });
+
+    it('Should boop the pawn and update the board correctly', () => {
+      const playerOnePawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
+      board.getCell(0, 1)!.pawn = playerOnePawn;
+      board.getCell(1, 1)!.pawn = playerOnePawn;
+      board.getCell(2, 1)!.pawn = playerOnePawn;
+
+      const result = board.promoteKittens(0, 1, 'S', Player.PlayerOne);
+
+      expect(result).toBe(true);
+      expect(board.getCell(0, 1)?.pawn).toBe(null);
+      expect(board.getCell(1, 1)?.pawn).toBe(null);
+      expect(board.getCell(2, 1)?.pawn).toBe(null);
     });
   });
 });

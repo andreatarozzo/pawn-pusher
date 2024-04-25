@@ -17,6 +17,39 @@ export interface IBaseBoard {
   getCell: (row: number, col: number) => BoardCell | null;
 }
 
+export interface IBoard {
+  canPawnBoop: (
+    pawnRow: number,
+    pawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ) => boolean;
+  canPawnsBePromoted: (
+    pawnRow: number,
+    pawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ) => boolean;
+  hasPlayerWon: (
+    pawnRow: number,
+    pawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ) => boolean;
+  boopPawn: (
+    newPawnRow: number,
+    newPawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ) => boolean;
+  promoteKittens: (
+    newPawnRow: number,
+    newPawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ) => boolean;
+}
+
 export type BoardState = Array<Array<BoardCell>>;
 
 export enum Player {
@@ -74,4 +107,16 @@ export interface IBoardCell {
 
   getNeighbor: (directionKey: DirectionKey) => BoardCell | null;
   setNeighbor: (directionKey: DirectionKey, boardCell: BoardCell | null) => void;
+}
+
+export type AvailablePawns = {
+  [key in Player]: {
+    [key in PawnType]: number;
+  };
+};
+
+export interface IGameState {
+  currentPlayer: Player;
+  winner: Player | null;
+  availablePawns: AvailablePawns;
 }

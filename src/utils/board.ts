@@ -4,6 +4,7 @@ import {
   DirectionAdjustment,
   DirectionKey,
   IBaseBoard,
+  IBoard,
   PawnType,
   Player,
 } from '@/types';
@@ -45,21 +46,9 @@ export class BaseBoard implements IBaseBoard {
   }
 }
 
-export class Board extends BaseBoard {
+export class Board extends BaseBoard implements IBoard {
   constructor(maxRows: number, maxCols: number) {
     super(maxRows, maxCols);
-  }
-
-  isCoordinateOutOfBoundaries(row: number, col: number): boolean {
-    return row < 0 || row >= this.state.length || col < 0 || col >= this.state[0].length;
-  }
-
-  getAdjustedCoordinates(currentRow: number, currentCol: number, direction: Direction): number[] {
-    return [currentRow + direction[0], currentCol + direction[1]];
-  }
-
-  getCell(row: number, col: number): BoardCell | null {
-    return !this.isCoordinateOutOfBoundaries(row, col) ? this.state[row][col] : null;
   }
 
   canPawnBoop(
@@ -121,7 +110,7 @@ export class Board extends BaseBoard {
     newPawnCol: number,
     directionKey: DirectionKey,
     currentPlayer: Player,
-  ) {
+  ): boolean {
     if (this.canPawnBoop(newPawnRow, newPawnCol, directionKey, currentPlayer)) {
       const neighbor = this.getCell(newPawnRow, newPawnCol)!.getNeighbor(directionKey);
       const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
@@ -134,8 +123,27 @@ export class Board extends BaseBoard {
       }
 
       this.state[neighbor?.row!][neighbor?.col!].pawn = null;
+      return true;
     }
+    return false;
+  }
+
+  promoteKittens(
+    newPawnRow: number,
+    newPawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ): boolean {
+    if (this.canPawnsBePromoted(newPawnRow, newPawnCol, directionKey, currentPlayer)) {
+      const newPawn = this.getCell(newPawnRow, newPawnCol);
+      const neighbor = newPawn!.getNeighbor(directionKey);
+      const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
+
+      this.state[newPawn?.row!][newPawn?.col!].pawn = null;
+      this.state[neighbor?.row!][neighbor?.col!].pawn = null;
+      this.state[cellBehindNeighbor?.row!][cellBehindNeighbor?.col!].pawn = null;
+      return true;
+    }
+    return false;
   }
 }
-
-export const PromoteKittens = (boardState: BoardState) => {};
