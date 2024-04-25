@@ -37,14 +37,35 @@ export class BaseBoard implements IBaseBoard {
     }
   }
 
+  /**
+   * Check if the provided coordinates fall off the current game board
+   * @param row
+   * @param col
+   * @returns
+   */
   isCoordinateOutOfBoundaries(row: number, col: number): boolean {
     return row < 0 || row >= this.state.length || col < 0 || col >= this.state[0].length;
   }
 
+  /**
+   * Given a starting set of coordinates and a direction
+   * (coordinate modifier i.e [-1, 1] -> Start row + (-1), Start col + (1))
+   * return a new set of coordinates 1 cell away in the provided direction
+   * @param currentRow
+   * @param currentCol
+   * @param direction
+   * @returns
+   */
   getAdjustedCoordinates(currentRow: number, currentCol: number, direction: Direction): number[] {
     return [currentRow + direction[0], currentCol + direction[1]];
   }
 
+  /**
+   * Returns the content of the cell at the provided coordinates
+   * @param row
+   * @param col
+   * @returns
+   */
   getCell(row: number, col: number): BoardCell | null {
     return !this.isCoordinateOutOfBoundaries(row, col) ? this.state[row][col] : null;
   }
@@ -55,6 +76,14 @@ export class Board extends BaseBoard implements IBoard {
     super(maxRows, maxCols);
   }
 
+  /**
+   * Checks if the pawn at the given coordinates can boop the neighbor pawn located at the direction provided.
+   * @param pawnRow
+   * @param pawnCol
+   * @param directionKey N | NE | E | SE | S | SW | W | NW
+   * @param currentPlayer
+   * @returns
+   */
   canPawnBoop(
     pawnRow: number,
     pawnCol: number,
@@ -70,6 +99,15 @@ export class Board extends BaseBoard implements IBoard {
     );
   }
 
+  /**
+   * Checks if the pawn at the given coordinates can be promoted along the direction key provided
+   * Starting the computation at the row and col provided and moving forward at the direction passed as param.
+   * @param pawnRow
+   * @param pawnCol
+   * @param directionKey N | NE | E | SE | S | SW | W | NW
+   * @param currentPlayer
+   * @returns
+   */
   canPawnsBePromoted(
     pawnRow: number,
     pawnCol: number,
@@ -89,6 +127,15 @@ export class Board extends BaseBoard implements IBoard {
     );
   }
 
+  /**
+   * Checks if a player has won the game.
+   * Starting the computation at the row and col provided and moving forward at the direction passed as param.
+   * @param pawnRow
+   * @param pawnCol
+   * @param directionKey N | NE | E | SE | S | SW | W | NW
+   * @param currentPlayer
+   * @returns
+   */
   hasPlayerWon(
     pawnRow: number,
     pawnCol: number,
@@ -109,6 +156,17 @@ export class Board extends BaseBoard implements IBoard {
     );
   }
 
+  /**
+   * Updates the board state by booing the player's opponent pawn.
+   * Returns true if the boop was successful.
+   * False if the condition for a boop were not met.
+   * Starting the computation at the row and col provided and moving forward at the direction passed as param.
+   * @param newPawnRow
+   * @param newPawnCol
+   * @param directionKey N | NE | E | SE | S | SW | W | NW
+   * @param currentPlayer
+   * @returns
+   */
   boopPawn(
     newPawnRow: number,
     newPawnCol: number,
@@ -132,6 +190,17 @@ export class Board extends BaseBoard implements IBoard {
     return false;
   }
 
+  /**
+   * Updates the board state by removing the pawn that can be promoted.
+   * Returns true if the pawns were removed.
+   * False if the condition for promotion were not met.
+   * Starting the computation at the row and col provided and moving forward at the direction passed as param.
+   * @param newPawnRow
+   * @param newPawnCol
+   * @param directionKey
+   * @param currentPlayer
+   * @returns
+   */
   promoteKittens(
     newPawnRow: number,
     newPawnCol: number,

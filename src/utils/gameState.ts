@@ -21,10 +21,20 @@ export class GameState implements IGameState {
     }
   }
 
+  /**
+   * Increase the player's pawn counter for the given pawn type
+   * @param player
+   * @param type
+   */
   addPawnToAvailablePlayerPawns(player: Player, type: PawnType): void {
     this.availablePawns[player][type] += 1;
   }
 
+  /**
+   * Decrease the player's pawn counter for the given pawn type
+   * @param player
+   * @param type
+   */
   removePawnToAvailablePlayerPawns(player: Player, type: PawnType): void {
     this.availablePawns[player][type] -= this.availablePawns[player][type] ? 1 : 0;
   }

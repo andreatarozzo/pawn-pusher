@@ -107,6 +107,7 @@ export interface IBoardCell {
 
   getNeighbor: (directionKey: DirectionKey) => BoardCell | null;
   setNeighbor: (directionKey: DirectionKey, boardCell: BoardCell | null) => void;
+  scanNeighbors: () => Partial<NeighborCells>;
 }
 
 export type AvailablePawns = {
