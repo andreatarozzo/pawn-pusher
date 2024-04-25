@@ -12,6 +12,7 @@ import { BoardCell } from '.';
 
 export class BaseBoard implements IBaseBoard {
   state: BoardState;
+  readonly directionsList = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'] as DirectionKey[];
   readonly directionAdjustments: DirectionAdjustment = {
     N: [-1, 0],
     NE: [-1, 1],

@@ -1,12 +1,18 @@
-import { BoardCell } from '@/utils';
+import { Board, BoardCell } from '@/utils';
 
 export enum BoardSize {
   Rows = 6,
   Cols = 6,
 }
 
+export const PawnLimit = Object.freeze({
+  Kitten: 8,
+  Cat: 8,
+});
+
 export interface IBaseBoard {
   state: BoardState;
+  readonly directionsList: DirectionKey[];
   readonly directionAdjustments: DirectionAdjustment;
   isCoordinateOutOfBoundaries: (row: number, col: number) => boolean;
   getAdjustedCoordinates: (
@@ -119,7 +125,13 @@ export type AvailablePawns = {
 export interface IGameState {
   currentPlayer: Player;
   winner: Player | null;
-  availablePawns: AvailablePawns;
+  readonly pawnsCoordinates: PawnLocations;
+  readonly availablePawns: AvailablePawns;
   addPawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
   removePawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
+  checkWinCondition: (board: Board, pawnRow: number, pawnCol: number) => Player | null;
 }
+
+export type PawnLocations = {
+  [key in Player]: Coordinate[];
+};

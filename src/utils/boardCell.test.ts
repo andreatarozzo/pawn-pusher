@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { Board, generatePawn } from '.';
 import { BoardCell } from './boardCell';
-import { DirectionKey, PawnType, Player } from '@/types';
+import { BoardSize, DirectionKey, PawnType, Player } from '@/types';
 
 describe('BoardCell', () => {
   describe('init', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(6, 6);
+      board = new Board(BoardSize.Rows, BoardSize.Cols);
     });
 
     it('Should be able to populate its neighbors property on init', () => {
@@ -74,7 +74,7 @@ describe('BoardCell', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(6, 6);
+      board = new Board(BoardSize.Rows, BoardSize.Cols);
     });
 
     it('Should be able to get a neighbor when provided with a valid direction key', () => {
@@ -101,7 +101,7 @@ describe('BoardCell', () => {
     let board: Board;
 
     beforeEach(() => {
-      board = new Board(6, 6);
+      board = new Board(BoardSize.Rows, BoardSize.Cols);
     });
 
     it('Should provide an empty object if no neighbor have a pawn value set', () => {
