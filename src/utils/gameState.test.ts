@@ -134,9 +134,9 @@ describe('GameState', () => {
     });
 
     it('Should return null if the winning condition is not met for the current player', () => {
-      board.state[0][1].pawn = generatePawn(Player.PlayerOne, PawnType.Cat);
-      board.state[1][1].pawn = generatePawn(Player.PlayerOne, PawnType.Cat);
-      board.state[2][1].pawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
+      board.state[0][1].value = generatePawn(Player.PlayerOne, PawnType.Cat);
+      board.state[1][1].value = generatePawn(Player.PlayerOne, PawnType.Cat);
+      board.state[2][1].value = generatePawn(Player.PlayerOne, PawnType.Kitten);
 
       gameState.addPawnCoordinate(0, 1, Player.PlayerOne);
       gameState.addPawnCoordinate(1, 1, Player.PlayerOne);
@@ -146,9 +146,9 @@ describe('GameState', () => {
     });
 
     it('Should return the current player as winner if the winning condition is not met for the current player', () => {
-      board.state[0][1].pawn = generatePawn(Player.PlayerOne, PawnType.Cat);
-      board.state[1][1].pawn = generatePawn(Player.PlayerOne, PawnType.Cat);
-      board.state[2][1].pawn = generatePawn(Player.PlayerOne, PawnType.Cat);
+      board.state[0][1].value = generatePawn(Player.PlayerOne, PawnType.Cat);
+      board.state[1][1].value = generatePawn(Player.PlayerOne, PawnType.Cat);
+      board.state[2][1].value = generatePawn(Player.PlayerOne, PawnType.Cat);
 
       gameState.addPawnCoordinate(0, 1, Player.PlayerOne);
       gameState.addPawnCoordinate(1, 1, Player.PlayerOne);

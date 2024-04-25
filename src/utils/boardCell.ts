@@ -14,12 +14,12 @@ export class BoardCell implements IBoardCell {
   };
   row: number;
   col: number;
-  pawn: Pawn | null = null;
+  value: Pawn | null = null;
 
   constructor(row: number, col: number, pawn?: Pawn) {
     this.row = row;
     this.col = col;
-    this.pawn = pawn || null;
+    this.value = pawn || null;
   }
 
   /**
@@ -46,7 +46,7 @@ export class BoardCell implements IBoardCell {
    */
   scanNeighbors(): Partial<NeighborCells> {
     return Object.entries(this.neighbors).reduce((result, [directionKey, neighbor]) => {
-      if (neighbor && neighbor.pawn) {
+      if (neighbor && neighbor.value) {
         result[directionKey as DirectionKey] = neighbor;
       }
 

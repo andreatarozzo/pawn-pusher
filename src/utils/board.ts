@@ -94,9 +94,9 @@ export class Board extends BaseBoard implements IBoard {
     const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
     return Boolean(
       neighbor &&
-        neighbor.pawn &&
-        neighbor.pawn.player !== currentPlayer &&
-        (!neighbor?.getNeighbor(directionKey) || !neighbor.getNeighbor(directionKey)?.pawn),
+        neighbor.value &&
+        neighbor.value.player !== currentPlayer &&
+        (!neighbor?.getNeighbor(directionKey) || !neighbor.getNeighbor(directionKey)?.value),
     );
   }
 
@@ -120,11 +120,11 @@ export class Board extends BaseBoard implements IBoard {
     const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
     return Boolean(
       neighbor &&
-        neighbor.pawn?.player === currentPlayer &&
-        neighbor.pawn?.type === PawnType.Kitten &&
+        neighbor.value?.player === currentPlayer &&
+        neighbor.value?.type === PawnType.Kitten &&
         cellBehindNeighbor &&
-        cellBehindNeighbor.pawn?.player === currentPlayer &&
-        cellBehindNeighbor.pawn?.type === PawnType.Kitten,
+        cellBehindNeighbor.value?.player === currentPlayer &&
+        cellBehindNeighbor.value?.type === PawnType.Kitten,
     );
   }
 
@@ -149,11 +149,11 @@ export class Board extends BaseBoard implements IBoard {
     const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
     return Boolean(
       neighbor &&
-        neighbor.pawn?.player === currentPlayer &&
-        neighbor.pawn?.type === PawnType.Cat &&
+        neighbor.value?.player === currentPlayer &&
+        neighbor.value?.type === PawnType.Cat &&
         cellBehindNeighbor &&
-        cellBehindNeighbor.pawn?.player === currentPlayer &&
-        cellBehindNeighbor.pawn?.type === PawnType.Cat,
+        cellBehindNeighbor.value?.player === currentPlayer &&
+        cellBehindNeighbor.value?.type === PawnType.Cat,
     );
   }
 
@@ -180,12 +180,12 @@ export class Board extends BaseBoard implements IBoard {
 
       // Check if booped pawn will fall off board;
       if (cellBehindNeighbor) {
-        this.state[cellBehindNeighbor.row!][cellBehindNeighbor.col!].pawn = JSON.parse(
-          JSON.stringify(neighbor?.pawn!),
+        this.state[cellBehindNeighbor.row!][cellBehindNeighbor.col!].value = JSON.parse(
+          JSON.stringify(neighbor?.value!),
         );
       }
 
-      this.state[neighbor?.row!][neighbor?.col!].pawn = null;
+      this.state[neighbor?.row!][neighbor?.col!].value = null;
       return true;
     }
     return false;
@@ -213,9 +213,9 @@ export class Board extends BaseBoard implements IBoard {
       const neighbor = newPawn!.getNeighbor(directionKey);
       const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
 
-      this.state[newPawn?.row!][newPawn?.col!].pawn = null;
-      this.state[neighbor?.row!][neighbor?.col!].pawn = null;
-      this.state[cellBehindNeighbor?.row!][cellBehindNeighbor?.col!].pawn = null;
+      this.state[newPawn?.row!][newPawn?.col!].value = null;
+      this.state[neighbor?.row!][neighbor?.col!].value = null;
+      this.state[cellBehindNeighbor?.row!][cellBehindNeighbor?.col!].value = null;
       return true;
     }
     return false;

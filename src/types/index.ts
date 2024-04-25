@@ -10,6 +10,10 @@ export const PawnLimit = Object.freeze({
   Cat: 8,
 });
 
+export type DirectionKey = 'N' | 'NE' | 'E' | 'SE' | 'S' | 'SW' | 'W' | 'NW';
+export type Direction = [-1, 0] | [-1, 1] | [0, 1] | [1, 1] | [1, 0] | [1, -1] | [0, -1] | [-1, -1];
+export type Coordinate = [number, number];
+
 export interface IBaseBoard {
   state: BoardState;
   readonly directionsList: DirectionKey[];
@@ -56,6 +60,24 @@ export interface IBoard {
   ) => boolean;
 }
 
+export interface IBoardCell {
+  value: Pawn | null;
+
+  getNeighbor: (directionKey: DirectionKey) => BoardCell | null;
+  setNeighbor: (directionKey: DirectionKey, boardCell: BoardCell | null) => void;
+  scanNeighbors: () => Partial<NeighborCells>;
+}
+
+export interface IGameState {
+  currentPlayer: Player;
+  winner: Player | null;
+  readonly pawnsCoordinates: PawnLocations;
+  readonly availablePawns: AvailablePawns;
+  addPawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
+  removePawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
+  checkWinCondition: (board: Board, pawnRow: number, pawnCol: number) => Player | null;
+}
+
 export type BoardState = Array<Array<BoardCell>>;
 
 export enum Player {
@@ -72,10 +94,6 @@ export enum PawnType {
   Kitten = 'Kitten',
   Cat = 'Cat',
 }
-
-export type DirectionKey = 'N' | 'NE' | 'E' | 'SE' | 'S' | 'SW' | 'W' | 'NW';
-export type Direction = [-1, 0] | [-1, 1] | [0, 1] | [1, 1] | [1, 0] | [1, -1] | [0, -1] | [-1, -1];
-export type Coordinate = [number, number];
 
 export type DirectionAdjustment = {
   N: [-1, 0];
@@ -108,29 +126,11 @@ export type NeighborCells = {
   [key in DirectionKey]: BoardCell | null;
 };
 
-export interface IBoardCell {
-  pawn: Pawn | null;
-
-  getNeighbor: (directionKey: DirectionKey) => BoardCell | null;
-  setNeighbor: (directionKey: DirectionKey, boardCell: BoardCell | null) => void;
-  scanNeighbors: () => Partial<NeighborCells>;
-}
-
 export type AvailablePawns = {
   [key in Player]: {
     [key in PawnType]: number;
   };
 };
-
-export interface IGameState {
-  currentPlayer: Player;
-  winner: Player | null;
-  readonly pawnsCoordinates: PawnLocations;
-  readonly availablePawns: AvailablePawns;
-  addPawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
-  removePawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
-  checkWinCondition: (board: Board, pawnRow: number, pawnCol: number) => Player | null;
-}
 
 export type PawnLocations = {
   [key in Player]: Coordinate[];

@@ -111,9 +111,9 @@ describe('BoardCell', () => {
     });
 
     it('Should provide an object with includes only the neighbors with a pawn value set', () => {
-      board.state[1][1].pawn = generatePawn(Player.PlayerOne, PawnType.Cat);
-      board.state[1][2].pawn = generatePawn(Player.PlayerTwo, PawnType.Kitten);
-      board.state[0][0].pawn = generatePawn(Player.PlayerTwo, PawnType.Kitten);
+      board.state[1][1].value = generatePawn(Player.PlayerOne, PawnType.Cat);
+      board.state[1][2].value = generatePawn(Player.PlayerTwo, PawnType.Kitten);
+      board.state[0][0].value = generatePawn(Player.PlayerTwo, PawnType.Kitten);
 
       const scanResult = board.state[0][1].scanNeighbors();
       expect(Object.keys(scanResult)).toStrictEqual(['SE', 'S', 'W'] as DirectionKey[]);
