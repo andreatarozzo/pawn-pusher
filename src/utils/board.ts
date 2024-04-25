@@ -3,120 +3,98 @@ import {
   Direction,
   DirectionAdjustment,
   DirectionKey,
-  IBoardCell,
-  NeighborCells,
-  Pawn,
   PawnType,
   Player,
 } from '@/types';
+import { BoardCell } from '.';
 
-export const DirectionAdjustments: DirectionAdjustment = {
-  N: [-1, 0],
-  NE: [-1, 1],
-  E: [0, 1],
-  SE: [1, 1],
-  S: [1, 0],
-  SW: [1, -1],
-  W: [0, -1],
-  NW: [-1, -1],
-};
-
-export const isCoordinateOutOfBoundaries = (
-  boardState: BoardState,
-  row: number,
-  col: number,
-): boolean => {
-  return row < 0 || row >= boardState.length || col < 0 || col >= boardState[0].length;
-};
-
-export const getAdjustedCoordinates = (
-  currentRow: number,
-  currentCol: number,
-  direction: Direction,
-): number[] => {
-  return [currentRow + direction[0], currentCol + direction[1]];
-};
-
-export class BoardCell implements IBoardCell {
-  neighbors: NeighborCells = {
-    N: null,
-    NE: null,
-    E: null,
-    SE: null,
-    S: null,
-    SW: null,
-    W: null,
-    NW: null,
+export class Board {
+  readonly state: BoardState;
+  readonly directionAdjustments: DirectionAdjustment = {
+    N: [-1, 0],
+    NE: [-1, 1],
+    E: [0, 1],
+    SE: [1, 1],
+    S: [1, 0],
+    SW: [1, -1],
+    W: [0, -1],
+    NW: [-1, -1],
   };
-  pawn: Pawn | null = null;
 
-  constructor() {}
+  constructor(maxRows: number, maxCols: number) {
+    this.state = Array.from({ length: maxRows }).map((_, row) =>
+      Array.from({ length: maxCols }).map((_, col) => new BoardCell(row, col)),
+    );
 
-  getNeighbor(directionKey: DirectionKey): BoardCell | null {
-    return this.neighbors[directionKey];
+    this.state.forEach((row, rowIdx) =>
+      row.forEach((_, colIdx) => this.getCell(rowIdx, colIdx)!.init(this)),
+    );
   }
 
-  setNeighbor(directionKey: DirectionKey, boardCell: BoardCell | null) {
-    this.neighbors[directionKey] = boardCell;
+  isCoordinateOutOfBoundaries(row: number, col: number): boolean {
+    return row < 0 || row >= this.state.length || col < 0 || col >= this.state[0].length;
   }
 
-  init(boardState: BoardState, row: number, col: number) {
-    Object.entries(DirectionAdjustments).forEach(([directionKey, directionAdjustment]) => {
-      const [newRow, newCol] = getAdjustedCoordinates(row, col, directionAdjustment);
-      this.setNeighbor(
-        directionKey as DirectionKey,
-        !isCoordinateOutOfBoundaries(boardState, newRow, newCol)
-          ? boardState[newRow][newCol]
-          : null,
-      );
-    });
+  getAdjustedCoordinates(currentRow: number, currentCol: number, direction: Direction): number[] {
+    return [currentRow + direction[0], currentCol + direction[1]];
+  }
+
+  getCell(row: number, col: number): BoardCell | null {
+    return !this.isCoordinateOutOfBoundaries(row, col) ? this.state[row][col] : null;
+  }
+
+  canPawnBoop(
+    pawnRow: number,
+    pawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ): boolean {
+    const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
+    return Boolean(
+      neighbor &&
+        neighbor.pawn &&
+        neighbor.pawn.player !== currentPlayer &&
+        !neighbor?.getNeighbor(directionKey)?.pawn,
+    );
+  }
+
+  canPawnsBePromoted(
+    pawnRow: number,
+    pawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ): boolean {
+    const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
+    const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
+    return Boolean(
+      neighbor &&
+        neighbor.pawn?.player === currentPlayer &&
+        neighbor.pawn?.type === PawnType.Kitten &&
+        cellBehindNeighbor &&
+        cellBehindNeighbor.pawn?.player === currentPlayer &&
+        cellBehindNeighbor.pawn?.type === PawnType.Kitten,
+    );
+  }
+
+  hasPlayerWon(
+    pawnRow: number,
+    pawnCol: number,
+    directionKey: DirectionKey,
+    currentPlayer: Player,
+  ): boolean {
+    const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
+    const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
+    return Boolean(
+      neighbor &&
+        neighbor.pawn?.player === currentPlayer &&
+        neighbor.pawn?.type === PawnType.Cat &&
+        cellBehindNeighbor &&
+        cellBehindNeighbor.pawn?.player === currentPlayer &&
+        cellBehindNeighbor.pawn?.type === PawnType.Cat,
+    );
   }
 }
 
-export const boardInitialState: BoardState = Array.from({ length: 6 }).map((_) =>
-  Array.from({ length: 6 }).map((_) => new BoardCell()),
-);
-
-export const canBoop = (cell: BoardCell, directionKey: DirectionKey, currentPlayer: Player) => {
-  const neighbor = cell.getNeighbor(directionKey);
-  return Boolean(
-    neighbor &&
-      neighbor.pawn &&
-      neighbor.pawn.player !== currentPlayer &&
-      !neighbor?.getNeighbor(directionKey)?.pawn,
-  );
-};
-
-export const canPromote = (cell: BoardCell, directionKey: DirectionKey, currentPlayer: Player) => {
-  const neighbor = cell.getNeighbor(directionKey);
-  const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
-  return Boolean(
-    neighbor &&
-      neighbor.pawn?.player === currentPlayer &&
-      neighbor.pawn?.type === PawnType.Kitten &&
-      cellBehindNeighbor &&
-      cellBehindNeighbor.pawn?.player === currentPlayer &&
-      cellBehindNeighbor.pawn?.type === PawnType.Kitten,
-  );
-};
-
-export const hasPlayerWon = (
-  cell: BoardCell,
-  directionKey: DirectionKey,
-  currentPlayer: Player,
-) => {
-  const neighbor = cell.getNeighbor(directionKey);
-  const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
-  return Boolean(
-    neighbor &&
-      neighbor.pawn?.player === currentPlayer &&
-      neighbor.pawn?.type === PawnType.Cat &&
-      cellBehindNeighbor &&
-      cellBehindNeighbor.pawn?.player === currentPlayer &&
-      cellBehindNeighbor.pawn?.type === PawnType.Cat,
-  );
-};
-
-export const Boop = (boardState: BoardState, targetPawnRow: number, targetPawnCol: number) => {};
+export const Boop = (boardState: BoardState, placedPawnRow: number, placedPawnCol: number) => {};
 
 export const PromoteKittens = (boardState: BoardState) => {};
