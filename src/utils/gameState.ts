@@ -14,13 +14,18 @@ export class GameState implements IGameState {
     },
   };
 
-  constructor() {}
+  constructor(currentPlayer?: Player, availablePawns?: AvailablePawns) {
+    if (currentPlayer && availablePawns) {
+      this.currentPlayer = currentPlayer;
+      this.availablePawns = availablePawns;
+    }
+  }
 
-  addPawnToAvailablePlayerPawns(player: Player, type: PawnType) {
+  addPawnToAvailablePlayerPawns(player: Player, type: PawnType): void {
     this.availablePawns[player][type] += 1;
   }
 
-  removePawnToAvailablePlayerPawns(player: Player, type: PawnType) {
+  removePawnToAvailablePlayerPawns(player: Player, type: PawnType): void {
     this.availablePawns[player][type] -= this.availablePawns[player][type] ? 1 : 0;
   }
 }

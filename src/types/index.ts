@@ -6,7 +6,7 @@ export enum BoardSize {
 }
 
 export interface IBaseBoard {
-  readonly state: BoardState;
+  state: BoardState;
   readonly directionAdjustments: DirectionAdjustment;
   isCoordinateOutOfBoundaries: (row: number, col: number) => boolean;
   getAdjustedCoordinates: (
@@ -119,4 +119,6 @@ export interface IGameState {
   currentPlayer: Player;
   winner: Player | null;
   availablePawns: AvailablePawns;
+  addPawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
+  removePawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
 }

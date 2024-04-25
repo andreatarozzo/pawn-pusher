@@ -11,7 +11,7 @@ import {
 import { BoardCell } from '.';
 
 export class BaseBoard implements IBaseBoard {
-  readonly state: BoardState;
+  state: BoardState;
   readonly directionAdjustments: DirectionAdjustment = {
     N: [-1, 0],
     NE: [-1, 1],
@@ -23,14 +23,18 @@ export class BaseBoard implements IBaseBoard {
     NW: [-1, -1],
   };
 
-  constructor(maxRows: number, maxCols: number) {
-    this.state = Array.from({ length: maxRows }).map((_, row) =>
-      Array.from({ length: maxCols }).map((_, col) => new BoardCell(row, col)),
-    );
+  constructor(maxRows: number, maxCols: number, boardState?: BoardState) {
+    if (!boardState) {
+      this.state = Array.from({ length: maxRows }).map((_, row) =>
+        Array.from({ length: maxCols }).map((_, col) => new BoardCell(row, col)),
+      );
 
-    this.state.forEach((row, rowIdx) =>
-      row.forEach((_, colIdx) => this.getCell(rowIdx, colIdx)!.init(this)),
-    );
+      this.state.forEach((row, rowIdx) =>
+        row.forEach((_, colIdx) => this.getCell(rowIdx, colIdx)!.init(this)),
+      );
+    } else {
+      this.state = boardState;
+    }
   }
 
   isCoordinateOutOfBoundaries(row: number, col: number): boolean {

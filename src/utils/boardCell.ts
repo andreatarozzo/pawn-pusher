@@ -16,9 +16,10 @@ export class BoardCell implements IBoardCell {
   col: number;
   pawn: Pawn | null = null;
 
-  constructor(row: number, col: number) {
+  constructor(row: number, col: number, pawn?: Pawn) {
     this.row = row;
     this.col = col;
+    this.pawn = pawn || null;
   }
 
   getNeighbor(directionKey: DirectionKey): BoardCell | null {
