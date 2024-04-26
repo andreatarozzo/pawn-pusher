@@ -245,7 +245,7 @@ describe('Board', () => {
 
       const result = board.boopPawn(1, 1, 'S', Player.PlayerOne);
 
-      expect(result).toBe(false);
+      expect(result).toBe(null);
       expect(board.getCell(1, 1)!.value).toStrictEqual(playerOnePawn);
       expect(board.getCell(2, 1)!.value).toStrictEqual(playerOnePawn);
     });
@@ -258,7 +258,11 @@ describe('Board', () => {
 
       const result = board.boopPawn(1, 1, 'S', Player.PlayerOne);
 
-      expect(result).toBe(true);
+      expect(result).toStrictEqual({
+        pawnBoopedDestinationCell: [3, 1],
+        pawnBoopedOriginCell: [2, 1],
+        type: PawnType.Kitten,
+      });
       expect(board.getCell(1, 1)!.value).toStrictEqual(playerOnePawn);
       expect(board.getCell(2, 1)!.value).toStrictEqual(null);
       expect(board.getCell(3, 1)!.value).toStrictEqual(playerTwoPawn);
@@ -279,12 +283,12 @@ describe('Board', () => {
 
       const result = board.promoteKittens(0, 1, 'S', Player.PlayerOne);
 
-      expect(result).toBe(false);
+      expect(result).toBe(null);
       expect(board.getCell(0, 1)?.value).toStrictEqual(playerOnePawn);
       expect(board.getCell(1, 1)?.value).toStrictEqual(playerOnePawn);
     });
 
-    it('Should boop the pawn and update the board correctly', () => {
+    it('Should promote the pawn and update the board correctly', () => {
       const playerOnePawn = generatePawn(Player.PlayerOne, PawnType.Kitten);
       board.getCell(0, 1)!.value = playerOnePawn;
       board.getCell(1, 1)!.value = playerOnePawn;
@@ -292,7 +296,11 @@ describe('Board', () => {
 
       const result = board.promoteKittens(0, 1, 'S', Player.PlayerOne);
 
-      expect(result).toBe(true);
+      expect(result).toStrictEqual([
+        [0, 1],
+        [1, 1],
+        [2, 1],
+      ]);
       expect(board.getCell(0, 1)?.value).toBe(null);
       expect(board.getCell(1, 1)?.value).toBe(null);
       expect(board.getCell(2, 1)?.value).toBe(null);

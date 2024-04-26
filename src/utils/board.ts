@@ -1,5 +1,7 @@
 import {
   BoardState,
+  BoopResult,
+  Coordinate,
   Direction,
   DirectionAdjustment,
   DirectionKey,
@@ -173,9 +175,10 @@ export class Board extends BaseBoard implements IBoard {
     newPawnCol: number,
     directionKey: DirectionKey,
     currentPlayer: Player,
-  ): boolean {
+  ): BoopResult | null {
     if (this.canPawnBoop(newPawnRow, newPawnCol, directionKey, currentPlayer)) {
       const neighbor = this.getCell(newPawnRow, newPawnCol)!.getNeighbor(directionKey);
+      const type = neighbor?.value?.type!;
       const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
 
       // Check if booped pawn will fall off board;
@@ -186,9 +189,15 @@ export class Board extends BaseBoard implements IBoard {
       }
 
       this.state[neighbor?.row!][neighbor?.col!].value = null;
-      return true;
+      return {
+        type,
+        pawnBoopedOriginCell: [neighbor?.row!, neighbor?.col!],
+        pawnBoopedDestinationCell: cellBehindNeighbor
+          ? [cellBehindNeighbor.row!, cellBehindNeighbor.col!]
+          : null,
+      };
     }
-    return false;
+    return null;
   }
 
   /**
@@ -198,7 +207,7 @@ export class Board extends BaseBoard implements IBoard {
    * Starting the computation at the row and col provided and moving forward at the direction passed as param.
    * @param newPawnRow
    * @param newPawnCol
-   * @param directionKey
+   * @param directionKey N | NE | E | SE | S | SW | W | NW
    * @param currentPlayer
    * @returns
    */
@@ -207,7 +216,7 @@ export class Board extends BaseBoard implements IBoard {
     newPawnCol: number,
     directionKey: DirectionKey,
     currentPlayer: Player,
-  ): boolean {
+  ): Coordinate[] | null {
     if (this.canPawnsBePromoted(newPawnRow, newPawnCol, directionKey, currentPlayer)) {
       const newPawn = this.getCell(newPawnRow, newPawnCol);
       const neighbor = newPawn!.getNeighbor(directionKey);
@@ -216,8 +225,12 @@ export class Board extends BaseBoard implements IBoard {
       this.state[newPawn?.row!][newPawn?.col!].value = null;
       this.state[neighbor?.row!][neighbor?.col!].value = null;
       this.state[cellBehindNeighbor?.row!][cellBehindNeighbor?.col!].value = null;
-      return true;
+      return [
+        [newPawn?.row!, newPawn?.col!],
+        [neighbor?.row!, neighbor?.col!],
+        [cellBehindNeighbor?.row!, cellBehindNeighbor?.col!],
+      ];
     }
-    return false;
+    return null;
   }
 }

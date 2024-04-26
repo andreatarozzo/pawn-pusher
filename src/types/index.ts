@@ -51,13 +51,13 @@ export interface IBoard {
     newPawnCol: number,
     directionKey: DirectionKey,
     currentPlayer: Player,
-  ) => boolean;
+  ) => BoopResult | null;
   promoteKittens: (
     newPawnRow: number,
     newPawnCol: number,
     directionKey: DirectionKey,
     currentPlayer: Player,
-  ) => boolean;
+  ) => Coordinate[] | null;
 }
 
 export interface IBoardCell {
@@ -69,13 +69,27 @@ export interface IBoardCell {
 }
 
 export interface IGameState {
+  gameBoard: Board;
   currentPlayer: Player;
   winner: Player | null;
   readonly pawnsCoordinates: PawnLocations;
   readonly availablePawns: AvailablePawns;
-  addPawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
-  removePawnToAvailablePlayerPawns: (player: Player, type: PawnType) => void;
-  checkWinCondition: (board: Board, pawnRow: number, pawnCol: number) => Player | null;
+  switchPlayer: () => Player;
+  getAvailablePawns: (type: PawnType, player?: Player) => number;
+  addPawnToAvailablePlayerPawns: (
+    type: PawnType,
+    incrementValue?: number | null,
+    player?: Player,
+  ) => void;
+  removePawnFromAvailablePlayerPawns: (
+    type: PawnType,
+    decrementValue?: number | null,
+    player?: Player,
+  ) => void;
+  registerPawn: (row: number, col: number, type: PawnType, player?: Player) => boolean;
+  checkWinCondition: (pawnRow: number, pawnCol: number, player?: Player) => Player | null;
+  boopScan: (pawnRow: number, pawnCol: number, player?: Player) => BoopResult[] | null;
+  promotionScan: (pawnRow: number, pawnCol: number, player?: Player) => Coordinate[] | null;
 }
 
 export type BoardState = Array<Array<BoardCell>>;
@@ -134,4 +148,10 @@ export type AvailablePawns = {
 
 export type PawnLocations = {
   [key in Player]: Coordinate[];
+};
+
+export type BoopResult = {
+  type: PawnType;
+  pawnBoopedOriginCell: Coordinate;
+  pawnBoopedDestinationCell: Coordinate | null;
 };
