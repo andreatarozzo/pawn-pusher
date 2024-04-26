@@ -5,6 +5,6 @@ interface BoardProps {
   children?: ReactNode;
 }
 
-export const BoopBoard: FC<BoardProps> = ({ children }) => {
+export const Board: FC<BoardProps> = ({ children }) => {
   return <div>{children}</div>;
 };

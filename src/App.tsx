@@ -1,11 +1,11 @@
 import './App.scss';
-import { BoopBoard } from './components/Board/Board';
+import { Board } from './components/Board/Board';
 
 function App() {
   return (
     <div className="">
       <p className="text-red-800 font-bold">test</p>
-      <BoopBoard />
+      <Board />
     </div>
   );
 }
