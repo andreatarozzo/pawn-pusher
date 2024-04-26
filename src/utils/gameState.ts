@@ -114,7 +114,6 @@ export class GameState implements IGameState {
     }
 
     this.availablePawns[targetPlayer][type] -= targetDecrementValue;
-    console.log;
   }
 
   /**
