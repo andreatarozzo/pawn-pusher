@@ -1,5 +1,5 @@
 import './App.scss';
-import { BoopBoard } from './components/BoopBoard/BoopBoard';
+import { BoopBoard } from './components/Board/Board';
 
 function App() {
   return (

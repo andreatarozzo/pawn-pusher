@@ -32,6 +32,8 @@ export class GameState implements IGameState {
 
   // TODO: see todo below, we should pass some config where a dev can pass some sort of method mapping
   // Depending on action required instead of tightly coupling a gameBoard object with a gameState object
+
+  // TODO: 2 - Thinking about replacing params in methods with params object
   constructor(gameBoard: Board, currentPlayer?: Player, availablePawns?: AvailablePawns) {
     this.gameBoard = gameBoard;
     if (currentPlayer && availablePawns) {

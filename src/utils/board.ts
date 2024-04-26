@@ -26,6 +26,8 @@ export class BaseBoard implements IBaseBoard {
     NW: [-1, -1],
   };
 
+  // TODO: Thinking about replacing params in methods with params object
+
   constructor(maxRows: number, maxCols: number, boardState?: BoardState) {
     if (!boardState) {
       this.state = Array.from({ length: maxRows }).map((_, row) =>
