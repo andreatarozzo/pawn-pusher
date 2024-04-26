@@ -1,5 +1,5 @@
 import { FC, ReactNode } from 'react';
-import './BoopBoard.scss';
+import './Board.scss';
 
 interface BoardProps {
   children?: ReactNode;
