@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { BaseBoard, Board, BoardCell, generatePawn } from '.';
+import { BaseBoard, GameBoard, BoardCell, generatePawn } from '.';
 import { BoardSize, PawnType, Player } from '@/types';
 
 describe('BaseBoard', () => {
@@ -102,10 +102,10 @@ describe('BaseBoard', () => {
 
 describe('Board', () => {
   describe('canPawnBoop', () => {
-    let board: Board;
+    let board: GameBoard;
 
     beforeEach(() => {
-      board = new Board(BoardSize.Rows, BoardSize.Rows);
+      board = new GameBoard(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should return FALSE when there are no other pawn around the target cell', () => {
@@ -138,10 +138,10 @@ describe('Board', () => {
   });
 
   describe('canPawnsBePromoted', () => {
-    let board: Board;
+    let board: GameBoard;
 
     beforeEach(() => {
-      board = new Board(BoardSize.Rows, BoardSize.Rows);
+      board = new GameBoard(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should return FALSE the coordinates provided are out of the board boundaries', () => {
@@ -185,10 +185,10 @@ describe('Board', () => {
   });
 
   describe('hasPlayerWon', () => {
-    let board: Board;
+    let board: GameBoard;
 
     beforeEach(() => {
-      board = new Board(BoardSize.Rows, BoardSize.Rows);
+      board = new GameBoard(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should return FALSE the coordinates provided are out of the board boundaries', () => {
@@ -232,10 +232,10 @@ describe('Board', () => {
   });
 
   describe('boopPawn', () => {
-    let board: Board;
+    let board: GameBoard;
 
     beforeEach(() => {
-      board = new Board(BoardSize.Rows, BoardSize.Rows);
+      board = new GameBoard(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should do nothing if the condition to boop a neighbor pawn are not met', () => {
@@ -270,10 +270,10 @@ describe('Board', () => {
   });
 
   describe('promoteKittens', () => {
-    let board: Board;
+    let board: GameBoard;
 
     beforeEach(() => {
-      board = new Board(BoardSize.Rows, BoardSize.Rows);
+      board = new GameBoard(BoardSize.Rows, BoardSize.Rows);
     });
 
     it('Should do nothing if the condition for a promotion are not met', () => {

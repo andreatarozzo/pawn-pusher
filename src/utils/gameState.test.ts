@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Board, GameState } from '.';
+import { GameBoard, GameState } from '.';
 import { BoardSize, BoopResult, PawnType, Player } from '@/types';
 
 const baseAvailablePawns = {
@@ -18,7 +18,7 @@ const baseAvailablePawns = {
 describe('GameState', () => {
   describe('constructor', () => {
     it('Should initialize correctly', () => {
-      const gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      const gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
 
       expect(gameState).toBeTruthy();
       expect(gameState.winner).toBe(null);
@@ -31,7 +31,7 @@ describe('GameState', () => {
     let gameState: GameState;
 
     beforeEach(() => {
-      gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
     });
 
     it('Should add a pawn as expected', () => {
@@ -70,7 +70,7 @@ describe('GameState', () => {
     let gameState: GameState;
 
     beforeEach(() => {
-      gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
     });
 
     it('Available pawns counter should not go below 0', () => {
@@ -108,7 +108,7 @@ describe('GameState', () => {
 
   describe('registerPawn', () => {
     it('Should successfully register a new pawn for the current player', () => {
-      const gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      const gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
 
       const registerPawnResult = gameState.registerPawn(1, 1, PawnType.Kitten);
       expect(registerPawnResult).toBe(true);
@@ -117,7 +117,7 @@ describe('GameState', () => {
     });
 
     it('Should not register a pawn if there are not available pawn left of the same kind for the current player', () => {
-      const gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      const gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
 
       const registerPawnResult = gameState.registerPawn(1, 1, PawnType.Cat);
       expect(registerPawnResult).toBe(false);
@@ -127,7 +127,7 @@ describe('GameState', () => {
 
   describe('removePawnCoordinate', () => {
     it('Should remove the provided pawn coordinates from the pawns coordinate list associated with the specified player', () => {
-      const gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      const gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
 
       gameState.registerPawn(1, 1, PawnType.Kitten);
       gameState.removePawnCoordinate(1, 1, Player.PlayerOne);
@@ -135,7 +135,7 @@ describe('GameState', () => {
     });
 
     it('Should remove the provided pawn coordinates from the pawns coordinate list associated with the target player', () => {
-      const gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      const gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
 
       gameState.registerPawn(1, 1, PawnType.Kitten);
       gameState.removePawnCoordinate(1, 1, Player.PlayerOne);
@@ -147,7 +147,7 @@ describe('GameState', () => {
     let gameState: GameState;
 
     beforeEach(() => {
-      gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
     });
 
     it('Should return null if the winning condition is not met for the current player', () => {
@@ -173,7 +173,7 @@ describe('GameState', () => {
     let gameState: GameState;
 
     beforeEach(() => {
-      gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
     });
 
     it('Should not update the board if the boop conditions for the pawn at the given coordinates are not met', () => {
@@ -203,7 +203,7 @@ describe('GameState', () => {
     let gameState: GameState;
 
     beforeEach(() => {
-      gameState = new GameState(new Board(BoardSize.Rows, BoardSize.Cols));
+      gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
     });
 
     it('Should not update the board if the promotion conditions for the pawn at the given coordinates are not met', () => {

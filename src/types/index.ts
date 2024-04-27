@@ -1,4 +1,4 @@
-import { Board, BoardCell } from '@/utils';
+import { GameBoard, BoardCell } from '@/utils';
 
 export enum BoardSize {
   Rows = 6,
@@ -25,6 +25,7 @@ export interface IBaseBoard {
     direction: Direction,
   ) => number[];
   getCell: (row: number, col: number) => BoardCell | null;
+  getOppositeDirection: (directionKey: DirectionKey) => DirectionKey;
 }
 
 export interface IBoard {
@@ -69,7 +70,7 @@ export interface IBoardCell {
 }
 
 export interface IGameState {
-  gameBoard: Board;
+  gameBoard: GameBoard;
   currentPlayer: Player;
   winner: Player | null;
   readonly pawnsCoordinates: PawnLocations;

@@ -1,11 +1,15 @@
+import { useState } from 'react';
 import './App.scss';
-import { Board } from './components/Board/Board';
+import { BoardContainer } from './components';
+import { BoardSize } from './types';
+import { GameBoard, GameState } from './utils';
 
 function App() {
+  const [gameState] = useState(new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols)));
+
   return (
     <div className="">
-      <p className="text-red-800 font-bold">test</p>
-      <Board />
+      <BoardContainer gameState={gameState} />
     </div>
   );
 }

@@ -74,9 +74,35 @@ export class BaseBoard implements IBaseBoard {
   getCell(row: number, col: number): BoardCell | null {
     return !this.isCoordinateOutOfBoundaries(row, col) ? this.state[row][col] : null;
   }
+
+  /**
+   * Returns the opposite direction
+   * @param directionKey
+   * @returns
+   */
+  getOppositeDirection(directionKey: DirectionKey): DirectionKey {
+    switch (directionKey) {
+      case 'N':
+        return 'S';
+      case 'NE':
+        return 'SW';
+      case 'E':
+        return 'W';
+      case 'SE':
+        return 'NW';
+      case 'S':
+        return 'N';
+      case 'SW':
+        return 'NE';
+      case 'W':
+        return 'E';
+      case 'NW':
+        return 'SE';
+    }
+  }
 }
 
-export class Board extends BaseBoard implements IBoard {
+export class GameBoard extends BaseBoard implements IBoard {
   constructor(maxRows: number, maxCols: number) {
     super(maxRows, maxCols);
   }
@@ -95,11 +121,15 @@ export class Board extends BaseBoard implements IBoard {
     directionKey: DirectionKey,
     currentPlayer: Player,
   ): boolean {
-    const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
+    const currentCell = this.getCell(pawnRow, pawnCol);
+    const neighbor = currentCell?.getNeighbor(directionKey);
     return Boolean(
       neighbor &&
         neighbor.value &&
         neighbor.value.player !== currentPlayer &&
+        ((currentCell?.value?.type === PawnType.Kitten &&
+          neighbor.value.type === PawnType.Kitten) ||
+          currentCell?.value?.type === PawnType.Cat) &&
         (!neighbor?.getNeighbor(directionKey) || !neighbor.getNeighbor(directionKey)?.value),
     );
   }
@@ -120,15 +150,21 @@ export class Board extends BaseBoard implements IBoard {
     currentPlayer: Player,
   ): boolean {
     if (this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
-    const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
+    const currentCell = this.getCell(pawnRow, pawnCol);
+    const cellBehindCurrent = currentCell?.getNeighbor(this.getOppositeDirection(directionKey));
+    const neighbor = currentCell?.getNeighbor(directionKey);
     const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
+
     return Boolean(
       neighbor &&
         neighbor.value?.player === currentPlayer &&
         neighbor.value?.type === PawnType.Kitten &&
-        cellBehindNeighbor &&
-        cellBehindNeighbor.value?.player === currentPlayer &&
-        cellBehindNeighbor.value?.type === PawnType.Kitten,
+        ((cellBehindNeighbor &&
+          cellBehindNeighbor.value?.player === currentPlayer &&
+          cellBehindNeighbor.value?.type === PawnType.Kitten) ||
+          (cellBehindCurrent &&
+            cellBehindCurrent.value?.player === currentPlayer &&
+            cellBehindCurrent.value?.type === PawnType.Kitten)),
     );
   }
 
@@ -221,12 +257,19 @@ export class Board extends BaseBoard implements IBoard {
   ): Coordinate[] | null {
     if (this.canPawnsBePromoted(newPawnRow, newPawnCol, directionKey, currentPlayer)) {
       const newPawn = this.getCell(newPawnRow, newPawnCol);
+      const cellBehindCurrent = newPawn?.getNeighbor(this.getOppositeDirection(directionKey));
       const neighbor = newPawn!.getNeighbor(directionKey);
       const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
 
       this.state[newPawn?.row!][newPawn?.col!].value = null;
       this.state[neighbor?.row!][neighbor?.col!].value = null;
-      this.state[cellBehindNeighbor?.row!][cellBehindNeighbor?.col!].value = null;
+
+      if (!cellBehindCurrent?.value || cellBehindCurrent.value.player !== currentPlayer) {
+        this.state[cellBehindNeighbor?.row!][cellBehindNeighbor?.col!].value = null;
+      } else {
+        this.state[cellBehindCurrent?.row!][cellBehindCurrent?.col!].value = null;
+      }
+
       return [
         [newPawn?.row!, newPawn?.col!],
         [neighbor?.row!, neighbor?.col!],

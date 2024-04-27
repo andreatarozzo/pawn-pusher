@@ -8,11 +8,11 @@ import {
   PawnType,
   Player,
 } from '@/types';
-import { Board } from './board';
+import { GameBoard } from './board';
 import { generatePawn } from './pawn';
 
 export class GameState implements IGameState {
-  gameBoard: Board;
+  gameBoard: GameBoard;
   currentPlayer: Player = Player.PlayerOne;
   winner: Player | null = null;
   readonly pawnsCoordinates: PawnLocations = {
@@ -34,7 +34,7 @@ export class GameState implements IGameState {
   // Depending on action required instead of tightly coupling a gameBoard object with a gameState object
 
   // TODO: 2 - Thinking about replacing params in methods with params object
-  constructor(gameBoard: Board, currentPlayer?: Player, availablePawns?: AvailablePawns) {
+  constructor(gameBoard: GameBoard, currentPlayer?: Player, availablePawns?: AvailablePawns) {
     this.gameBoard = gameBoard;
     if (currentPlayer && availablePawns) {
       this.currentPlayer = currentPlayer;
