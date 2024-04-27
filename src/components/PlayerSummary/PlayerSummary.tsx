@@ -5,13 +5,16 @@ interface PlayerSummaryProps {
   player: Player;
   availablePawns: AvailablePawns;
   currentPlayer: Player;
+  selectedPawn: PawnType | null;
   onPawnSelected: (player: Player, type: PawnType) => void;
+  className?: string;
 }
 
 interface PawnSelectionProps {
   player: Player;
   currentPlayer: Player;
   availablePawns: AvailablePawns;
+  selectedPawn: PawnType | null;
   onPawnSelected: (player: Player, type: PawnType) => void;
 }
 
@@ -19,22 +22,29 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
   player,
   currentPlayer,
   availablePawns,
+  selectedPawn,
   onPawnSelected,
 }) => {
+  const isPlayerCurrentPlayer = player === currentPlayer;
+  const hasKittens = availablePawns[player][PawnType.Kitten] > 0;
+  const hasCats = availablePawns[player][PawnType.Cat] > 0;
   return (
     <div className="flex">
       <div className="flex items-center justify-center">
-        {availablePawns[player][PawnType.Kitten]} X
+        <span>{availablePawns[player][PawnType.Kitten]} X</span>
         <button
           onClick={() =>
-            player === currentPlayer && availablePawns[player][PawnType.Kitten] > 0
-              ? onPawnSelected(player, PawnType.Kitten)
-              : null
+            isPlayerCurrentPlayer && hasKittens ? onPawnSelected(player, PawnType.Kitten) : null
           }
         >
           <img
             alt={`${player === Player.PlayerOne ? 'blue' : 'orange'} kitten`}
-            className="h-16 w-16 mt-2 cursor-pointer"
+            className={[
+              'h-16 w-16 mt-2 cursor-pointer',
+              isPlayerCurrentPlayer && !selectedPawn && hasKittens
+                ? 'animate-bounce ease-in-out'
+                : '',
+            ].join(' ')}
             src={
               player === Player.PlayerOne
                 ? 'src/assets/kitten-blue.png'
@@ -53,13 +63,16 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
         >
           <img
             alt={`${player === Player.PlayerOne ? 'blue' : 'orange'} cat`}
-            className="h-16 w-16 mt-0 cursor-pointer"
+            className={[
+              'h-16 w-16 mt-0 cursor-pointer',
+              isPlayerCurrentPlayer && !selectedPawn && hasCats ? 'animate-bounce ease-in-out' : '',
+            ].join(' ')}
             src={
               player === Player.PlayerOne ? 'src/assets/cat-blue.png' : 'src/assets/cat-orange.png'
             }
           />
         </button>
-        X {availablePawns[player][PawnType.Cat]}
+        <span>X {availablePawns[player][PawnType.Cat]}</span>
       </div>
     </div>
   );
@@ -69,10 +82,12 @@ export const PlayerSummary: FC<PlayerSummaryProps> = ({
   player,
   currentPlayer,
   availablePawns,
+  selectedPawn,
   onPawnSelected,
+  className,
 }) => {
   return (
-    <div className="flex items-center justify-between">
+    <div className={[`flex items-center justify-between`, className || ''].join(' ')}>
       {player === Player.PlayerOne ? (
         <>
           Player {player}
@@ -80,6 +95,7 @@ export const PlayerSummary: FC<PlayerSummaryProps> = ({
             player={player}
             currentPlayer={currentPlayer}
             availablePawns={availablePawns}
+            selectedPawn={selectedPawn}
             onPawnSelected={onPawnSelected}
           />
         </>
@@ -89,6 +105,7 @@ export const PlayerSummary: FC<PlayerSummaryProps> = ({
             player={player}
             currentPlayer={currentPlayer}
             availablePawns={availablePawns}
+            selectedPawn={selectedPawn}
             onPawnSelected={onPawnSelected}
           />
           Player {player}

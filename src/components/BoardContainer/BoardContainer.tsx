@@ -11,6 +11,7 @@ interface BoardContainerProps {
 export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
   const [currentPlayer, setCurrentPlayer] = useState(gameState.currentPlayer);
   const [selectedPawn, setSelectedPawn] = useState<PawnType | null>(null);
+  const [winner, setWinner] = useState<Player | null>(null);
 
   console.log('currentPlayer', currentPlayer);
   const onPawnSelected = (player: Player, type: PawnType) => {
@@ -41,7 +42,7 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
               scan.pawnBoopedDestinationCell[1],
               scan.player,
             );
-            if (winner) console.log('WINNER!', 'PLAYER:', winner);
+            if (winner) setWinner(winner);
           }
         });
       }
@@ -57,7 +58,9 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
         player={Player.PlayerTwo}
         currentPlayer={currentPlayer}
         availablePawns={gameState.availablePawns}
+        selectedPawn={selectedPawn}
         onPawnSelected={onPawnSelected}
+        className="mb-5"
       />
       <Board key={selectedPawn} gameState={gameState} onPawnPlaced={onPawnPlaced} />
       <PlayerSummary
@@ -65,6 +68,8 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
         currentPlayer={currentPlayer}
         availablePawns={gameState.availablePawns}
         onPawnSelected={onPawnSelected}
+        selectedPawn={selectedPawn}
+        className="mt-5"
       />
     </div>
   );
