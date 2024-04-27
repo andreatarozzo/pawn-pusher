@@ -112,21 +112,21 @@ export class GameBoard extends BaseBoard implements IBoard {
    * @param pawnRow
    * @param pawnCol
    * @param directionKey N | NE | E | SE | S | SW | W | NW
-   * @param currentPlayer
+   * @param player
    * @returns
    */
   canPawnBoop(
     pawnRow: number,
     pawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ): boolean {
     const currentCell = this.getCell(pawnRow, pawnCol);
     const neighbor = currentCell?.getNeighbor(directionKey);
     return Boolean(
       neighbor &&
         neighbor.value &&
-        neighbor.value.player !== currentPlayer &&
+        neighbor.value.player !== player &&
         ((currentCell?.value?.type === PawnType.Kitten &&
           neighbor.value.type === PawnType.Kitten) ||
           currentCell?.value?.type === PawnType.Cat) &&
@@ -140,14 +140,14 @@ export class GameBoard extends BaseBoard implements IBoard {
    * @param pawnRow
    * @param pawnCol
    * @param directionKey N | NE | E | SE | S | SW | W | NW
-   * @param currentPlayer
+   * @param player
    * @returns
    */
   canPawnsBePromoted(
     pawnRow: number,
     pawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ): boolean {
     if (this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
     const currentCell = this.getCell(pawnRow, pawnCol);
@@ -157,13 +157,13 @@ export class GameBoard extends BaseBoard implements IBoard {
 
     return Boolean(
       neighbor &&
-        neighbor.value?.player === currentPlayer &&
+        neighbor.value?.player === player &&
         neighbor.value?.type === PawnType.Kitten &&
         ((cellBehindNeighbor &&
-          cellBehindNeighbor.value?.player === currentPlayer &&
+          cellBehindNeighbor.value?.player === player &&
           cellBehindNeighbor.value?.type === PawnType.Kitten) ||
           (cellBehindCurrent &&
-            cellBehindCurrent.value?.player === currentPlayer &&
+            cellBehindCurrent.value?.player === player &&
             cellBehindCurrent.value?.type === PawnType.Kitten)),
     );
   }
@@ -174,14 +174,14 @@ export class GameBoard extends BaseBoard implements IBoard {
    * @param pawnRow
    * @param pawnCol
    * @param directionKey N | NE | E | SE | S | SW | W | NW
-   * @param currentPlayer
+   * @param player
    * @returns
    */
   hasPlayerWon(
     pawnRow: number,
     pawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ): boolean {
     if (this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
 
@@ -189,10 +189,10 @@ export class GameBoard extends BaseBoard implements IBoard {
     const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
     return Boolean(
       neighbor &&
-        neighbor.value?.player === currentPlayer &&
+        neighbor.value?.player === player &&
         neighbor.value?.type === PawnType.Cat &&
         cellBehindNeighbor &&
-        cellBehindNeighbor.value?.player === currentPlayer &&
+        cellBehindNeighbor.value?.player === player &&
         cellBehindNeighbor.value?.type === PawnType.Cat,
     );
   }
@@ -205,16 +205,16 @@ export class GameBoard extends BaseBoard implements IBoard {
    * @param newPawnRow
    * @param newPawnCol
    * @param directionKey N | NE | E | SE | S | SW | W | NW
-   * @param currentPlayer
+   * @param player
    * @returns
    */
   boopPawn(
     newPawnRow: number,
     newPawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ): BoopResult | null {
-    if (this.canPawnBoop(newPawnRow, newPawnCol, directionKey, currentPlayer)) {
+    if (this.canPawnBoop(newPawnRow, newPawnCol, directionKey, player)) {
       const neighbor = this.getCell(newPawnRow, newPawnCol)!.getNeighbor(directionKey);
       const type = neighbor?.value?.type!;
       const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
@@ -229,6 +229,7 @@ export class GameBoard extends BaseBoard implements IBoard {
       this.state[neighbor?.row!][neighbor?.col!].value = null;
       return {
         type,
+        player: player === Player.PlayerOne ? Player.PlayerTwo : Player.PlayerOne,
         pawnBoopedOriginCell: [neighbor?.row!, neighbor?.col!],
         pawnBoopedDestinationCell: cellBehindNeighbor
           ? [cellBehindNeighbor.row!, cellBehindNeighbor.col!]
@@ -246,16 +247,16 @@ export class GameBoard extends BaseBoard implements IBoard {
    * @param newPawnRow
    * @param newPawnCol
    * @param directionKey N | NE | E | SE | S | SW | W | NW
-   * @param currentPlayer
+   * @param player
    * @returns
    */
   promoteKittens(
     newPawnRow: number,
     newPawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ): Coordinate[] | null {
-    if (this.canPawnsBePromoted(newPawnRow, newPawnCol, directionKey, currentPlayer)) {
+    if (this.canPawnsBePromoted(newPawnRow, newPawnCol, directionKey, player)) {
       const newPawn = this.getCell(newPawnRow, newPawnCol);
       const cellBehindCurrent = newPawn?.getNeighbor(this.getOppositeDirection(directionKey));
       const neighbor = newPawn!.getNeighbor(directionKey);
@@ -264,7 +265,7 @@ export class GameBoard extends BaseBoard implements IBoard {
       this.state[newPawn?.row!][newPawn?.col!].value = null;
       this.state[neighbor?.row!][neighbor?.col!].value = null;
 
-      if (!cellBehindCurrent?.value || cellBehindCurrent.value.player !== currentPlayer) {
+      if (!cellBehindCurrent?.value || cellBehindCurrent.value.player !== player) {
         this.state[cellBehindNeighbor?.row!][cellBehindNeighbor?.col!].value = null;
       } else {
         this.state[cellBehindCurrent?.row!][cellBehindCurrent?.col!].value = null;

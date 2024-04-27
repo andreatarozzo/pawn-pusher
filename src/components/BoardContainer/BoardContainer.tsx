@@ -26,18 +26,22 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
       gameState.registerPawn(row, col, selectedPawn!);
       gameState.checkWinCondition(row, col);
       const boopScanResult = gameState.boopScan(row, col);
+      console.log(boopScanResult);
       gameState.promotionScan(row, col);
       if (boopScanResult) {
         boopScanResult.forEach((scan: BoopResult) => {
           if (scan.pawnBoopedDestinationCell) {
-            gameState.checkWinCondition(
+            const winner = gameState.checkWinCondition(
               scan.pawnBoopedDestinationCell[0],
               scan.pawnBoopedDestinationCell[1],
+              scan.player,
             );
             gameState.promotionScan(
               scan.pawnBoopedDestinationCell[0],
               scan.pawnBoopedDestinationCell[1],
+              scan.player,
             );
+            if (winner) console.log('WINNER!', 'PLAYER:', winner);
           }
         });
       }

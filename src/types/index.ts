@@ -33,31 +33,31 @@ export interface IBoard {
     pawnRow: number,
     pawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ) => boolean;
   canPawnsBePromoted: (
     pawnRow: number,
     pawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ) => boolean;
   hasPlayerWon: (
     pawnRow: number,
     pawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ) => boolean;
   boopPawn: (
     newPawnRow: number,
     newPawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ) => BoopResult | null;
   promoteKittens: (
     newPawnRow: number,
     newPawnCol: number,
     directionKey: DirectionKey,
-    currentPlayer: Player,
+    player: Player,
   ) => Coordinate[] | null;
 }
 
@@ -153,6 +153,7 @@ export type PawnLocations = {
 
 export type BoopResult = {
   type: PawnType;
+  player: Player;
   pawnBoopedOriginCell: Coordinate;
   pawnBoopedDestinationCell: Coordinate | null;
 };
