@@ -13,7 +13,7 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
   const [selectedPawn, setSelectedPawn] = useState<PawnType | null>(null);
   const [winner, setWinner] = useState<Player | null>(null);
 
-  console.log('currentPlayer', currentPlayer);
+  if (winner) console.log('PLAYER: ', winner, ' WON!!!');
   const onPawnSelected = (player: Player, type: PawnType) => {
     if (player === currentPlayer) {
       console.log('player: ', player, ' selected pawn: ', type);
