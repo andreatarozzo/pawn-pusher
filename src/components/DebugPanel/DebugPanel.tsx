@@ -1,29 +1,72 @@
-import { PawnType, Player } from '@/types';
+import { Coordinate, PawnType, Player } from '@/types';
 import { GameState } from '@/utils';
 import { FC } from 'react';
 
 interface DebugPanelProps {
   gameState: GameState;
-  selectedPawn: PawnType | null;
 }
 
-export const DebugPanel: FC<DebugPanelProps> = ({ gameState, selectedPawn }) => {
+export const DebugPanel: FC<DebugPanelProps> = ({ gameState }) => {
   return (
-    <div className="absolute bottom-0 left-5 w-fit text-left flex items-center">
-      <div className="mr-5">Current Player: {gameState.currentPlayer}</div>
-      <div className="flex items-center">
-        Selected Pawn:
-        {selectedPawn && (
+    <div className="absolute mt-10 left-10 w-fit text-left">
+      <div className="mt-14">
+        <div>Pawn Coordinates</div>
+        <div className="flex items-center">
           <img
-            alt={`currently selected ${gameState.currentPlayer === Player.PlayerOne ? 'blue' : 'orange'} kitten`}
-            className="h-16 w-16 mt-2 cursor-pointer"
-            src={
-              gameState.currentPlayer === Player.PlayerOne
-                ? `src/assets/${selectedPawn.toLowerCase()}-blue.png`
-                : `src/assets/${selectedPawn.toLowerCase()}-orange.png`
-            }
+            alt={`blue kitten`}
+            className="h-10 w-10 mt-2 cursor-pointer"
+            src="src/assets/kitten-blue.png"
           />
-        )}
+          {gameState.pawnsCoordinates[Player.PlayerOne][PawnType.Kitten].map(
+            (coordinate: Coordinate) => (
+              <span className="not-first:ml-2">
+                [ {coordinate[0]}-{coordinate[1]} ]
+              </span>
+            ),
+          )}
+        </div>
+        <div className="flex items-center">
+          <img
+            alt={`blue kitten`}
+            className="h-10 w-10 mt-2 cursor-pointer"
+            src="src/assets/cat-blue.png"
+          />
+          {gameState.pawnsCoordinates[Player.PlayerOne][PawnType.Cat].map(
+            (coordinate: Coordinate) => (
+              <span className="not-first:ml-2">
+                [ {coordinate[0]}-{coordinate[1]} ]
+              </span>
+            ),
+          )}
+        </div>
+        <div className="flex items-center">
+          <img
+            alt={`blue kitten`}
+            className="h-10 w-10 mt-2 cursor-pointer"
+            src="src/assets/kitten-orange.png"
+          />
+          {gameState.pawnsCoordinates[Player.PlayerTwo][PawnType.Kitten].map(
+            (coordinate: Coordinate) => (
+              <span className="not-first:ml-2">
+                [ {coordinate[0]}-{coordinate[1]} ]
+              </span>
+            ),
+          )}
+        </div>
+        <div className="flex items-center">
+          <img
+            alt={`blue kitten`}
+            className="h-10 w-10 mt-2 cursor-pointer"
+            src="src/assets/cat-orange.png"
+          />
+          {gameState.pawnsCoordinates[Player.PlayerTwo][PawnType.Cat].map(
+            (coordinate: Coordinate) => (
+              <span className="not-first:ml-2">
+                [ {coordinate[0]}-{coordinate[1]} ]
+              </span>
+            ),
+          )}
+        </div>
       </div>
     </div>
   );

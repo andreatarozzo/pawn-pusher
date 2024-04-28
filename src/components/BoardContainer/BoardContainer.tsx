@@ -52,7 +52,7 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
 
   return (
     <div>
-      <DebugPanel gameState={gameState} selectedPawn={selectedPawn} />
+      <DebugPanel gameState={gameState} />
       <PlayerSummary
         player={Player.PlayerTwo}
         currentPlayer={currentPlayer}

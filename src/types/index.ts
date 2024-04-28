@@ -77,6 +77,7 @@ export interface IGameState {
   readonly availablePawns: AvailablePawns;
   switchPlayer: () => Player;
   getAvailablePawns: (type: PawnType, player?: Player) => number;
+  removePawnCoordinate: (row: number, col: number, type: PawnType, player?: Player) => void;
   addPawnToAvailablePlayerPawns: (
     type: PawnType,
     incrementValue?: number | null,
@@ -148,7 +149,9 @@ export type AvailablePawns = {
 };
 
 export type PawnLocations = {
-  [key in Player]: Coordinate[];
+  [key in Player]: {
+    [key in PawnType]: Coordinate[];
+  };
 };
 
 export type BoopResult = {

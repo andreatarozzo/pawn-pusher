@@ -18,6 +18,18 @@ interface PawnSelectionProps {
   onPawnSelected: (player: Player, type: PawnType) => void;
 }
 
+// {selectedPawn && (
+//   <img
+//     alt={`currently selected ${gameState.currentPlayer === Player.PlayerOne ? 'blue' : 'orange'} kitten`}
+//     className="h-16 w-16 mt-2 cursor-pointer"
+//     src={
+//       gameState.currentPlayer === Player.PlayerOne
+//         ? `src/assets/${selectedPawn.toLowerCase()}-blue.png`
+//         : `src/assets/${selectedPawn.toLowerCase()}-orange.png`
+//     }
+//   />
+// )}
+
 export const PawnSelection: FC<PawnSelectionProps> = ({
   player,
   currentPlayer,

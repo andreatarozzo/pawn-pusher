@@ -16,17 +16,23 @@ export class GameState implements IGameState {
   currentPlayer: Player = Player.PlayerOne;
   winner: Player | null = null;
   readonly pawnsCoordinates: PawnLocations = {
-    [Player.PlayerOne]: [],
-    [Player.PlayerTwo]: [],
+    [Player.PlayerOne]: {
+      [PawnType.Cat]: [],
+      [PawnType.Kitten]: [],
+    },
+    [Player.PlayerTwo]: {
+      [PawnType.Cat]: [],
+      [PawnType.Kitten]: [],
+    },
   };
   readonly availablePawns: AvailablePawns = {
     [Player.PlayerOne]: {
-      Cat: 0,
-      Kitten: PawnLimit.Kitten,
+      [PawnType.Cat]: 0,
+      [PawnType.Kitten]: PawnLimit.Kitten,
     },
     [Player.PlayerTwo]: {
-      Cat: 0,
-      Kitten: PawnLimit.Kitten,
+      [PawnType.Cat]: 0,
+      [PawnType.Kitten]: PawnLimit.Kitten,
     },
   };
 
@@ -69,9 +75,9 @@ export class GameState implements IGameState {
    * @param player
    * @returns
    */
-  getPawnCoordinates(player?: Player): Coordinate[] {
+  getPawnCoordinates(type: PawnType, player?: Player): Coordinate[] {
     const targetPlayer = player || this.currentPlayer;
-    return this.pawnsCoordinates[targetPlayer];
+    return this.pawnsCoordinates[targetPlayer][type];
   }
 
   /**
@@ -129,7 +135,7 @@ export class GameState implements IGameState {
     const targetPlayer = player || this.currentPlayer;
 
     if (this.getAvailablePawns(type, targetPlayer) > 0) {
-      this.pawnsCoordinates[targetPlayer].push([row, col]);
+      this.pawnsCoordinates[targetPlayer][type].push([row, col]);
       this.gameBoard.state[row][col].value = generatePawn(targetPlayer, type);
       this.removePawnFromAvailablePlayerPawns(type, null, targetPlayer);
       return true;
@@ -141,13 +147,15 @@ export class GameState implements IGameState {
    * Remove the given coordinate from the player pawn coordinates
    * @param row
    * @param col
+   * @param type
    * @param player
    */
-  removePawnCoordinate(row: number, col: number, player: Player): void {
-    const indexToRemove = this.pawnsCoordinates[player].findIndex(
+  removePawnCoordinate(row: number, col: number, type: PawnType, player?: Player): void {
+    const targetPlayer = player || this.currentPlayer;
+    const indexToRemove = this.pawnsCoordinates[targetPlayer][type].findIndex(
       (coordinate) => coordinate[0] === row && coordinate[1] === col,
     );
-    if (indexToRemove !== -1) this.pawnsCoordinates[player].splice(indexToRemove, 1);
+    if (indexToRemove !== -1) this.pawnsCoordinates[targetPlayer][type].splice(indexToRemove, 1);
   }
 
   // TODO: These methods should accepts a callback function to be execute when needed to increase flexibility of the solution.
@@ -197,11 +205,14 @@ export class GameState implements IGameState {
         this.removePawnCoordinate(
           boopResult.pawnBoopedOriginCell[0],
           boopResult.pawnBoopedOriginCell[1],
+          boopResult.type,
           targetPlayer === Player.PlayerOne ? Player.PlayerTwo : Player.PlayerOne,
         );
 
         if (boopResult.pawnBoopedDestinationCell) {
-          this.pawnsCoordinates[opponent].push(boopResult.pawnBoopedDestinationCell);
+          this.pawnsCoordinates[opponent][boopResult.type].push(
+            boopResult.pawnBoopedDestinationCell,
+          );
         } else {
           // This means that the pawn fell off the board
           // So we remove add back the pawn to the counter
@@ -237,7 +248,9 @@ export class GameState implements IGameState {
         promotedPawnOrigin = [...promotedPawnOrigin, ...promotionResult];
         this.addPawnToAvailablePlayerPawns(PawnType.Kitten, 3, targetPlayer);
         this.addPawnToAvailablePlayerPawns(PawnType.Cat, null, targetPlayer);
-        promotionResult.forEach((c) => this.removePawnCoordinate(c[0], c[1], targetPlayer));
+        promotionResult.forEach((c) =>
+          this.removePawnCoordinate(c[0], c[1], PawnType.Kitten, targetPlayer),
+        );
       }
     }
 

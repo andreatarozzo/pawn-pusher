@@ -265,17 +265,20 @@ export class GameBoard extends BaseBoard implements IBoard {
       this.state[newPawn?.row!][newPawn?.col!].value = null;
       this.state[neighbor?.row!][neighbor?.col!].value = null;
 
-      if (!cellBehindCurrent?.value || cellBehindCurrent.value.player !== player) {
-        this.state[cellBehindNeighbor?.row!][cellBehindNeighbor?.col!].value = null;
-      } else {
-        this.state[cellBehindCurrent?.row!][cellBehindCurrent?.col!].value = null;
-      }
-
-      return [
+      const result: Coordinate[] = [
         [newPawn?.row!, newPawn?.col!],
         [neighbor?.row!, neighbor?.col!],
-        [cellBehindNeighbor?.row!, cellBehindNeighbor?.col!],
       ];
+
+      if (!cellBehindCurrent?.value || cellBehindCurrent.value.player !== player) {
+        this.state[cellBehindNeighbor?.row!][cellBehindNeighbor?.col!].value = null;
+        result.push([cellBehindNeighbor?.row!, cellBehindNeighbor?.col!]);
+      } else {
+        this.state[cellBehindCurrent?.row!][cellBehindCurrent?.col!].value = null;
+        result.push([cellBehindCurrent?.row!, cellBehindCurrent?.col!]);
+      }
+
+      return result;
     }
     return null;
   }
