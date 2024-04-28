@@ -64,7 +64,7 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
           <img
             alt={`${player === Player.PlayerOne ? 'blue' : 'orange'} cat`}
             className={[
-              'h-16 w-16 mt-0 cursor-pointer',
+              'h-16 w-16 cursor-pointer',
               isPlayerCurrentPlayer && !selectedPawn && hasCats ? 'animate-bounce ease-in-out' : '',
             ].join(' ')}
             src={

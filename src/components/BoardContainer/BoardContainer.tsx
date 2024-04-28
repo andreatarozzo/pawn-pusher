@@ -27,7 +27,6 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
       gameState.registerPawn(row, col, selectedPawn!);
       gameState.checkWinCondition(row, col);
       const boopScanResult = gameState.boopScan(row, col);
-      console.log(boopScanResult);
       gameState.promotionScan(row, col);
       if (boopScanResult) {
         boopScanResult.forEach((scan: BoopResult) => {
