@@ -72,6 +72,7 @@ export interface IBoardCell {
 export interface IGameState {
   gameBoard: GameBoard;
   currentPlayer: Player;
+  gameHistory: GameLog[];
   winner: Player | null;
   readonly pawnsCoordinates: PawnLocations;
   readonly availablePawns: AvailablePawns;
@@ -160,3 +161,23 @@ export type BoopResult = {
   pawnBoopedOriginCell: Coordinate;
   pawnBoopedDestinationCell: Coordinate | null;
 };
+
+export type GameLog = {
+  action: GameAction;
+  player: Player;
+  opponent?: Player;
+  pawnType?: PawnType;
+  originCoordinates?: Coordinate | Coordinate[];
+  destinationCoordinates?: Coordinate | Coordinate[];
+};
+
+export enum GameAction {
+  GameStart = 'Game Start',
+  CurrentPlayerChanged = 'CurrentPlayerChanged',
+  PawnPlaced = 'PawnPlaced',
+  PawnBumped = 'PawnBumped',
+  PawnBumpedOutOfBoundaries = 'PawnBumpedOutOfBoundaries',
+  PawnsPromoted = 'PawnsPromoted',
+  PawnAwarded = 'PawnAwarded',
+  PlayerWin = 'PlayerWin',
+}

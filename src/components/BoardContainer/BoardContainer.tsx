@@ -1,7 +1,10 @@
 import { BoopResult, PawnType, Player } from '@/types';
 import { GameState } from '@/utils';
 import { FC, ReactNode, useState } from 'react';
-import { Board, DebugPanel, PlayerSummary } from '..';
+import { Board, PawnCoordinatesSummary, PlayerSummary } from '..';
+import { GameHistory } from '../GameHistory/GameHistory';
+import { GameRules } from '../GameRules/GameRules';
+import './BoardContainer.scss';
 
 interface BoardContainerProps {
   gameState: GameState;
@@ -13,10 +16,8 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
   const [selectedPawn, setSelectedPawn] = useState<PawnType | null>(null);
   const [winner, setWinner] = useState<Player | null>(null);
 
-  if (winner) console.log('PLAYER: ', winner, ' WON!!!');
   const onPawnSelected = (player: Player, type: PawnType) => {
     if (player === currentPlayer) {
-      console.log('player: ', player, ' selected pawn: ', type);
       setSelectedPawn(type);
     }
   };
@@ -51,25 +52,31 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
   };
 
   return (
-    <div>
-      <DebugPanel gameState={gameState} />
-      <PlayerSummary
-        player={Player.PlayerTwo}
-        currentPlayer={currentPlayer}
-        availablePawns={gameState.availablePawns}
-        selectedPawn={selectedPawn}
-        onPawnSelected={onPawnSelected}
-        className="mb-5"
-      />
-      <Board key={selectedPawn} gameState={gameState} onPawnPlaced={onPawnPlaced} />
-      <PlayerSummary
-        player={Player.PlayerOne}
-        currentPlayer={currentPlayer}
-        availablePawns={gameState.availablePawns}
-        onPawnSelected={onPawnSelected}
-        selectedPawn={selectedPawn}
-        className="mt-5"
-      />
+    <div className="flex justify-center w-full">
+      <div className="mt-4 h-full game-info-container">
+        <GameRules className="mb-5" />
+        <PawnCoordinatesSummary gameState={gameState} />
+      </div>
+      <div className="mx-28">
+        <PlayerSummary
+          player={Player.PlayerTwo}
+          currentPlayer={currentPlayer}
+          availablePawns={gameState.availablePawns}
+          selectedPawn={selectedPawn}
+          onPawnSelected={onPawnSelected}
+          className="mb-3"
+        />
+        <Board key={selectedPawn} gameState={gameState} onPawnPlaced={onPawnPlaced} />
+        <PlayerSummary
+          player={Player.PlayerOne}
+          currentPlayer={currentPlayer}
+          availablePawns={gameState.availablePawns}
+          onPawnSelected={onPawnSelected}
+          selectedPawn={selectedPawn}
+          className="mt-3"
+        />
+      </div>
+      <GameHistory className="w-96 game-history-container" gameHistory={gameState.gameHistory} />
     </div>
   );
 };

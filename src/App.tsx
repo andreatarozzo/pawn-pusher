@@ -8,7 +8,7 @@ function App() {
   const [gameState] = useState(new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols)));
 
   return (
-    <div className="">
+    <div className="w-full">
       <BoardContainer gameState={gameState} />
     </div>
   );

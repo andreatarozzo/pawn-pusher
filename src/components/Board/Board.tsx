@@ -1,7 +1,6 @@
 import { BoardCell, GameState } from '@/utils';
 import { FC, ReactNode, useCallback } from 'react';
 import { Cell } from '../Cell/Cell';
-import './Board.scss';
 
 interface BoardProps {
   gameState: GameState;

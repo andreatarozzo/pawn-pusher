@@ -18,18 +18,6 @@ interface PawnSelectionProps {
   onPawnSelected: (player: Player, type: PawnType) => void;
 }
 
-// {selectedPawn && (
-//   <img
-//     alt={`currently selected ${gameState.currentPlayer === Player.PlayerOne ? 'blue' : 'orange'} kitten`}
-//     className="h-16 w-16 mt-2 cursor-pointer"
-//     src={
-//       gameState.currentPlayer === Player.PlayerOne
-//         ? `src/assets/${selectedPawn.toLowerCase()}-blue.png`
-//         : `src/assets/${selectedPawn.toLowerCase()}-orange.png`
-//     }
-//   />
-// )}
-
 export const PawnSelection: FC<PawnSelectionProps> = ({
   player,
   currentPlayer,
@@ -43,7 +31,7 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
   return (
     <div className="flex">
       <div className="flex items-center justify-center">
-        <span>{availablePawns[player][PawnType.Kitten]} X</span>
+        <strong className="mr-2">{availablePawns[player][PawnType.Kitten]} X</strong>
         <button
           onClick={() =>
             isPlayerCurrentPlayer && hasKittens ? onPawnSelected(player, PawnType.Kitten) : null
@@ -52,7 +40,7 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
           <img
             alt={`${player === Player.PlayerOne ? 'blue' : 'orange'} kitten`}
             className={[
-              'h-16 w-16 mt-2 cursor-pointer',
+              ' h-12 w-12 mt-2 cursor-pointer',
               isPlayerCurrentPlayer && !selectedPawn && hasKittens
                 ? 'animate-bounce ease-in-out'
                 : '',
@@ -76,7 +64,7 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
           <img
             alt={`${player === Player.PlayerOne ? 'blue' : 'orange'} cat`}
             className={[
-              'h-16 w-16 cursor-pointer',
+              'h-12 w-12 cursor-pointer',
               isPlayerCurrentPlayer && !selectedPawn && hasCats ? 'animate-bounce ease-in-out' : '',
             ].join(' ')}
             src={
@@ -84,8 +72,27 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
             }
           />
         </button>
-        <span>X {availablePawns[player][PawnType.Cat]}</span>
+        <strong className="ml-2">X {availablePawns[player][PawnType.Cat]}</strong>
       </div>
+    </div>
+  );
+};
+
+interface PawnSelectedProps {
+  player: Player;
+  selectedPawn: PawnType;
+  className?: string;
+}
+
+const PawnSelected: FC<PawnSelectedProps> = ({ player, selectedPawn, className }) => {
+  return (
+    <div className={['flex items-center justify-center', className || ''].join(' ')}>
+      Pawn selected
+      <img
+        alt={`selected ${player === Player.PlayerOne ? 'blue' : 'orange'} ${selectedPawn}`}
+        className="h-8 w-8 ml-2 cursor-pointer"
+        src={`src/assets/${selectedPawn}-${player === Player.PlayerOne ? 'blue' : 'orange'}.png`}
+      />
     </div>
   );
 };
@@ -99,28 +106,42 @@ export const PlayerSummary: FC<PlayerSummaryProps> = ({
   className,
 }) => {
   return (
-    <div className={[`flex items-center justify-between`, className || ''].join(' ')}>
+    <div className={className || ''}>
       {player === Player.PlayerOne ? (
         <>
-          Player {player}
-          <PawnSelection
-            player={player}
-            currentPlayer={currentPlayer}
-            availablePawns={availablePawns}
-            selectedPawn={selectedPawn}
-            onPawnSelected={onPawnSelected}
-          />
+          <div className="flex items-center justify-between">
+            <strong className="text-player-one">Player {player}</strong>
+            <PawnSelection
+              player={player}
+              currentPlayer={currentPlayer}
+              availablePawns={availablePawns}
+              selectedPawn={selectedPawn}
+              onPawnSelected={onPawnSelected}
+            />
+          </div>
+          <div className="h-8 w-full flex justify-end mt-3">
+            {selectedPawn && currentPlayer === Player.PlayerOne && (
+              <PawnSelected player={currentPlayer} selectedPawn={selectedPawn} />
+            )}
+          </div>
         </>
       ) : (
         <>
-          <PawnSelection
-            player={player}
-            currentPlayer={currentPlayer}
-            availablePawns={availablePawns}
-            selectedPawn={selectedPawn}
-            onPawnSelected={onPawnSelected}
-          />
-          Player {player}
+          <div className="h-8 w-full flex justify-start mb-3">
+            {selectedPawn && currentPlayer === Player.PlayerTwo && (
+              <PawnSelected player={currentPlayer} selectedPawn={selectedPawn} />
+            )}
+          </div>
+          <div className="flex items-center justify-between">
+            <PawnSelection
+              player={player}
+              currentPlayer={currentPlayer}
+              availablePawns={availablePawns}
+              selectedPawn={selectedPawn}
+              onPawnSelected={onPawnSelected}
+            />
+            <strong className="text-player-two">Player {player}</strong>
+          </div>
         </>
       )}
     </div>

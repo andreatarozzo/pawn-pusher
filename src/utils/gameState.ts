@@ -2,6 +2,8 @@ import {
   AvailablePawns,
   BoopResult,
   Coordinate,
+  GameAction,
+  GameLog,
   IGameState,
   PawnLimit,
   PawnLocations,
@@ -14,6 +16,7 @@ import { generatePawn } from './pawn';
 export class GameState implements IGameState {
   gameBoard: GameBoard;
   currentPlayer: Player = Player.PlayerOne;
+  gameHistory: GameLog[] = [];
   winner: Player | null = null;
   readonly pawnsCoordinates: PawnLocations = {
     [Player.PlayerOne]: {
@@ -46,6 +49,7 @@ export class GameState implements IGameState {
       this.currentPlayer = currentPlayer;
       this.availablePawns = availablePawns;
     }
+    this.addGameLogToHistory({ action: GameAction.GameStart, player: this.currentPlayer });
   }
 
   /**
@@ -55,6 +59,10 @@ export class GameState implements IGameState {
   switchPlayer(): Player {
     this.currentPlayer =
       this.currentPlayer === Player.PlayerOne ? Player.PlayerTwo : Player.PlayerOne;
+    this.addGameLogToHistory({
+      action: GameAction.CurrentPlayerChanged,
+      player: this.currentPlayer,
+    });
     return this.currentPlayer;
   }
 
@@ -78,6 +86,23 @@ export class GameState implements IGameState {
   getPawnCoordinates(type: PawnType, player?: Player): Coordinate[] {
     const targetPlayer = player || this.currentPlayer;
     return this.pawnsCoordinates[targetPlayer][type];
+  }
+
+  /**
+   * Adds a new entry to the game history
+   * @param params
+   */
+  addGameLogToHistory(params: GameLog): void {
+    const targetPlayer = params.player || this.currentPlayer;
+
+    this.gameHistory.push({
+      action: params.action,
+      player: targetPlayer,
+      opponent: targetPlayer === Player.PlayerOne ? Player.PlayerTwo : Player.PlayerOne,
+      pawnType: params.pawnType,
+      originCoordinates: params.originCoordinates,
+      destinationCoordinates: params.destinationCoordinates,
+    });
   }
 
   /**
@@ -138,6 +163,13 @@ export class GameState implements IGameState {
       this.pawnsCoordinates[targetPlayer][type].push([row, col]);
       this.gameBoard.state[row][col].value = generatePawn(targetPlayer, type);
       this.removePawnFromAvailablePlayerPawns(type, null, targetPlayer);
+
+      this.addGameLogToHistory({
+        action: GameAction.PawnPlaced,
+        pawnType: type,
+        originCoordinates: [row, col],
+        player: targetPlayer,
+      });
       return true;
     }
     return false;
@@ -177,6 +209,7 @@ export class GameState implements IGameState {
     for (const directionKey of this.gameBoard.directionsList) {
       if (this.gameBoard.hasPlayerWon(pawnRow, pawnCol, directionKey, targetPlayer)) {
         this.winner = targetPlayer;
+        this.addGameLogToHistory({ action: GameAction.PlayerWin, player: targetPlayer });
         return this.winner;
       }
     }
@@ -213,10 +246,28 @@ export class GameState implements IGameState {
           this.pawnsCoordinates[opponent][boopResult.type].push(
             boopResult.pawnBoopedDestinationCell,
           );
+          this.addGameLogToHistory({
+            action: GameAction.PawnBumped,
+            pawnType: boopResult.type,
+            player: boopResult.player,
+            originCoordinates: boopResult.pawnBoopedOriginCell,
+            destinationCoordinates: boopResult.pawnBoopedDestinationCell,
+          });
         } else {
           // This means that the pawn fell off the board
           // So we remove add back the pawn to the counter
           this.addPawnToAvailablePlayerPawns(boopResult.type, null, opponent);
+          this.addGameLogToHistory({
+            action: GameAction.PawnBumpedOutOfBoundaries,
+            pawnType: boopResult.type,
+            player: boopResult.player,
+            originCoordinates: boopResult.pawnBoopedOriginCell,
+          });
+          this.addGameLogToHistory({
+            action: GameAction.PawnAwarded,
+            pawnType: boopResult.type,
+            player: boopResult.player,
+          });
         }
       }
     }
@@ -251,6 +302,17 @@ export class GameState implements IGameState {
         promotionResult.forEach((c) =>
           this.removePawnCoordinate(c[0], c[1], PawnType.Kitten, targetPlayer),
         );
+        this.addGameLogToHistory({
+          action: GameAction.PawnsPromoted,
+          pawnType: PawnType.Kitten,
+          player: targetPlayer,
+          originCoordinates: promotionResult,
+        });
+        this.addGameLogToHistory({
+          action: GameAction.PawnAwarded,
+          pawnType: PawnType.Cat,
+          player: targetPlayer,
+        });
       }
     }
 
