@@ -8,6 +8,7 @@ module.exports = {
     colors: {
       'player-one': '#99d9ea',
       'player-two': '#f5b54f',
+      background: '#36435a',
       'scrollbar-background': '#36435a',
     },
   },

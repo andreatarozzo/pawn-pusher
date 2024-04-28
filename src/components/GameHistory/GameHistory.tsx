@@ -1,6 +1,5 @@
 import { GameAction, GameLog, PawnType, Player } from '@/types';
 import { FC, useEffect, useRef } from 'react';
-import './GameHistory.scss';
 
 interface GameHistoryProps {
   gameHistory: GameLog[];
@@ -26,7 +25,7 @@ const Log: FC<LogProps> = ({ gameLog }) => {
             >
               Player {gameLog.player}
             </strong>
-            takes the first move
+            choose your pawn
           </span>
         </div>
       );
@@ -41,7 +40,7 @@ const Log: FC<LogProps> = ({ gameLog }) => {
           >
             <strong>Player {gameLog.player}</strong>
           </span>
-          <span>turn started</span>
+          <span>choose your pawn</span>
         </div>
       );
     case GameAction.PawnPlaced:
@@ -190,11 +189,11 @@ export const GameHistory: FC<GameHistoryProps> = ({ gameHistory, className }) =>
   }, [gameHistory.length]);
 
   return (
-    <div className={['w-1/4', className || ''].join(' ')}>
+    <div className={className || ''}>
       <div className="font-bold">Game History</div>
       <div
         ref={logsContainerRef}
-        className="mt-7 game-history text-xs overflow-y-auto overflow-x-hidden scrollbar scrollbar-thumb-scrollbar-background"
+        className="mt-7 h-[390px] text-xs overflow-y-auto overflow-x-hidden scrollbar scrollbar-thumb-scrollbar-background"
       >
         {gameHistory.map((gameLog: GameLog) => (
           <Log gameLog={gameLog} />

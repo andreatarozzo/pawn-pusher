@@ -8,13 +8,13 @@ import './BoardContainer.scss';
 
 interface BoardContainerProps {
   gameState: GameState;
+  onGameWonHandler: (winner: Player) => void;
   children?: ReactNode;
 }
 
-export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
+export const BoardContainer: FC<BoardContainerProps> = ({ gameState, onGameWonHandler }) => {
   const [currentPlayer, setCurrentPlayer] = useState(gameState.currentPlayer);
   const [selectedPawn, setSelectedPawn] = useState<PawnType | null>(null);
-  const [winner, setWinner] = useState<Player | null>(null);
 
   const onPawnSelected = (player: Player, type: PawnType) => {
     if (player === currentPlayer) {
@@ -24,15 +24,16 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
 
   const onPawnPlaced = (row: number, col: number) => {
     if (selectedPawn) {
+      let currentWinner: Player | null;
       setSelectedPawn(null);
       gameState.registerPawn(row, col, selectedPawn!);
-      gameState.checkWinCondition(row, col);
+      currentWinner = gameState.checkWinCondition(row, col);
       const boopScanResult = gameState.boopScan(row, col);
       gameState.promotionScan(row, col);
       if (boopScanResult) {
         boopScanResult.forEach((scan: BoopResult) => {
           if (scan.pawnBoopedDestinationCell) {
-            const winner = gameState.checkWinCondition(
+            const opponentWinner = gameState.checkWinCondition(
               scan.pawnBoopedDestinationCell[0],
               scan.pawnBoopedDestinationCell[1],
               scan.player,
@@ -42,22 +43,27 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
               scan.pawnBoopedDestinationCell[1],
               scan.player,
             );
-            if (winner) setWinner(winner);
+            if (opponentWinner && !currentWinner) currentWinner = opponentWinner;
           }
         });
       }
-      gameState.switchPlayer();
-      setCurrentPlayer(gameState.currentPlayer);
+
+      if (!currentWinner) {
+        gameState.switchPlayer();
+        setCurrentPlayer(gameState.currentPlayer);
+      } else {
+        onGameWonHandler(currentWinner);
+      }
     }
   };
 
   return (
-    <div className="flex justify-center w-full">
-      <div className="mt-4 h-full game-info-container">
-        <GameRules className="mb-5" />
-        <PawnCoordinatesSummary gameState={gameState} />
+    <div className="flex flex-col md:flex-row justify-center w-full min-w-[600px]">
+      <div className="mt-[60px] h-full flex flex-col w-full items-center md:w-[400px] md:block">
+        <GameRules className="mb-5 w-[386px] md:w-full" />
+        <PawnCoordinatesSummary gameState={gameState} className="w-[386px] md:w-full" />
       </div>
-      <div className="mx-28">
+      <div className="mx-28 max-w-[386px] min-w-[386px]">
         <PlayerSummary
           player={Player.PlayerTwo}
           currentPlayer={currentPlayer}
@@ -76,7 +82,9 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState }) => {
           className="mt-3"
         />
       </div>
-      <GameHistory className="w-96 game-history-container" gameHistory={gameState.gameHistory} />
+      <div className="my-[30px] md:mt-[60px] h-full flex flex-col w-full items-center md:w-[400px] md:block">
+        <GameHistory gameHistory={gameState.gameHistory} className=" md:w-full" />
+      </div>
     </div>
   );
 };
