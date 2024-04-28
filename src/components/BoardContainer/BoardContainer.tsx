@@ -61,7 +61,10 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState, onGameWonHa
     <div className="flex flex-col md:flex-row justify-center w-full min-w-[600px]">
       <div className="mt-[60px] h-full flex flex-col w-full items-center md:w-[400px] md:block">
         <GameRules className="mb-5 w-[386px] md:w-full" />
-        <PawnCoordinatesSummary gameState={gameState} className="w-[386px] md:w-full" />
+        <PawnCoordinatesSummary
+          gameState={gameState}
+          className="hidden w-[386px] md:w-full md:block"
+        />
       </div>
       <div className="mx-28 max-w-[386px] min-w-[386px]">
         <PlayerSummary
@@ -83,7 +86,7 @@ export const BoardContainer: FC<BoardContainerProps> = ({ gameState, onGameWonHa
         />
       </div>
       <div className="my-[30px] md:mt-[60px] h-full flex flex-col w-full items-center md:w-[400px] md:block">
-        <GameHistory gameHistory={gameState.gameHistory} className=" md:w-full" />
+        <GameHistory gameHistory={gameState.gameHistory} className="hidden md:w-full md:block" />
       </div>
     </div>
   );
