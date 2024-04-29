@@ -46,9 +46,7 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
                 : '',
             ].join(' ')}
             src={
-              player === Player.PlayerOne
-                ? 'src/assets/kitten-blue.png'
-                : 'src/assets/kitten-orange.png'
+              player === Player.PlayerOne ? 'public/kitten-blue.png' : 'public/kitten-orange.png'
             }
           />
         </button>
@@ -67,9 +65,7 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
               'h-12 w-12 cursor-pointer',
               isPlayerCurrentPlayer && !selectedPawn && hasCats ? 'animate-bounce ease-in-out' : '',
             ].join(' ')}
-            src={
-              player === Player.PlayerOne ? 'src/assets/cat-blue.png' : 'src/assets/cat-orange.png'
-            }
+            src={player === Player.PlayerOne ? 'public/cat-blue.png' : 'public/cat-orange.png'}
           />
         </button>
         <strong className="ml-2">X {availablePawns[player][PawnType.Cat]}</strong>
@@ -91,7 +87,7 @@ const PawnSelected: FC<PawnSelectedProps> = ({ player, selectedPawn, className }
       <img
         alt={`selected ${player === Player.PlayerOne ? 'blue' : 'orange'} ${selectedPawn}`}
         className="h-8 w-8 ml-2 cursor-pointer"
-        src={`src/assets/${selectedPawn}-${player === Player.PlayerOne ? 'blue' : 'orange'}.png`}
+        src={`public/${selectedPawn}-${player === Player.PlayerOne ? 'blue' : 'orange'}.png`}
       />
     </div>
   );

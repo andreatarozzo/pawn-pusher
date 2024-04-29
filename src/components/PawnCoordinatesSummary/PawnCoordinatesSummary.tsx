@@ -20,7 +20,7 @@ export const PawnCoordinatesSummary: FC<PawnCoordinatesSummaryProps> = ({
         <img
           alt={`blue kitten`}
           className="h-7 w-7 mt-2 cursor-pointer"
-          src="src/assets/kitten-blue.png"
+          src="public/kitten-blue.png"
         />
         {gameState.pawnsCoordinates[Player.PlayerOne][PawnType.Kitten].map(
           (coordinate: Coordinate) => (
@@ -29,11 +29,7 @@ export const PawnCoordinatesSummary: FC<PawnCoordinatesSummaryProps> = ({
         )}
       </div>
       <div className="flex items-center">
-        <img
-          alt={`blue cat`}
-          className="h-7 w-7 mt-2 cursor-pointer"
-          src="src/assets/cat-blue.png"
-        />
+        <img alt={`blue cat`} className="h-7 w-7 mt-2 cursor-pointer" src="public/cat-blue.png" />
         {gameState.pawnsCoordinates[Player.PlayerOne][PawnType.Cat].map(
           (coordinate: Coordinate) => (
             <span className="not-first:ml-2">{JSON.stringify(coordinate)}</span>
@@ -44,7 +40,7 @@ export const PawnCoordinatesSummary: FC<PawnCoordinatesSummaryProps> = ({
         <img
           alt={`orange kitten`}
           className="h-7 w-7 mt-2 cursor-pointer"
-          src="src/assets/kitten-orange.png"
+          src="public/kitten-orange.png"
         />
         {gameState.pawnsCoordinates[Player.PlayerTwo][PawnType.Kitten].map(
           (coordinate: Coordinate) => (
@@ -56,7 +52,7 @@ export const PawnCoordinatesSummary: FC<PawnCoordinatesSummaryProps> = ({
         <img
           alt={`orange cat`}
           className="h-7 w-7 mt-2 cursor-pointer"
-          src="src/assets/cat-orange.png"
+          src="public/cat-orange.png"
         />
         {gameState.pawnsCoordinates[Player.PlayerTwo][PawnType.Cat].map(
           (coordinate: Coordinate) => (
