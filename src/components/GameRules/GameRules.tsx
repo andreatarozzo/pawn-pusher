@@ -11,7 +11,7 @@ export const GameRules: FC<GameRulesProps> = ({ className }) => {
       <div className="mb-7">
         <strong>Game Rules</strong>
       </div>
-      <div className="text-xs">
+      <div data-testid="game-rules-rules-container" className="text-xs">
         <p>
           Each Player starts with{' '}
           <strong>
@@ -36,7 +36,7 @@ export const GameRules: FC<GameRulesProps> = ({ className }) => {
           Pawns can be booped outside the board returning to the player's pawns pool.
         </p>
         <p className="mt-1">
-          Placing <strong>3 {PawnType.Kitten}s</strong> in a row will remove them from the board and
+          Placing <strong>3 {PawnType.Kitten}s</strong> in a row will remove them from the game and
           the player will be awarded with <strong>1 {PawnType.Cat}</strong>.
         </p>
         <p className="mt-1">
