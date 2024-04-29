@@ -38,7 +38,7 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
           }
         >
           <img
-            alt={`${player === Player.PlayerOne ? 'blue' : 'orange'} kitten`}
+            alt={`player ${player} ${player === Player.PlayerOne ? 'blue' : 'orange'} kitten`}
             className={[
               ' h-12 w-12 mt-2 cursor-pointer',
               isPlayerCurrentPlayer && !selectedPawn && hasKittens
@@ -58,7 +58,7 @@ export const PawnSelection: FC<PawnSelectionProps> = ({
           }
         >
           <img
-            alt={`${player === Player.PlayerOne ? 'blue' : 'orange'} cat`}
+            alt={`player ${player} ${player === Player.PlayerOne ? 'blue' : 'orange'} cat`}
             className={[
               'h-12 w-12 cursor-pointer',
               isPlayerCurrentPlayer && !selectedPawn && hasCats ? 'animate-bounce ease-in-out' : '',
@@ -83,7 +83,7 @@ const PawnSelected: FC<PawnSelectedProps> = ({ player, selectedPawn, className }
     <div className={['flex items-center justify-center', className || ''].join(' ')}>
       Pawn selected
       <img
-        alt={`selected ${player === Player.PlayerOne ? 'blue' : 'orange'} ${selectedPawn}`}
+        alt={`selected player ${player} ${player === Player.PlayerOne ? 'blue' : 'orange'} ${selectedPawn}`}
         className="h-8 w-8 ml-2 cursor-pointer"
         src={`/${selectedPawn.toLocaleLowerCase()}-${player === Player.PlayerOne ? 'blue' : 'orange'}.png`}
       />
