@@ -30,7 +30,7 @@ function App() {
       />
       <WinnerModal
         open={winnerModalOpen}
-        onCLose={() => setWinnerModalOpen(false)}
+        onClose={() => setWinnerModalOpen(false)}
         onGameReset={() => onGameReset()}
         winner={winner!}
       />
