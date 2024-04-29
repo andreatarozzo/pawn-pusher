@@ -114,17 +114,23 @@ export const PlayerSummary: FC<PlayerSummaryProps> = ({
             />
           </div>
           <div className="h-8 w-full flex justify-end mt-3">
-            {selectedPawn && currentPlayer === Player.PlayerOne && (
+            {selectedPawn && currentPlayer === Player.PlayerOne ? (
               <PawnSelected player={currentPlayer} selectedPawn={selectedPawn} />
-            )}
+            ) : // Very ugly but much profit
+            currentPlayer === Player.PlayerOne ? (
+              <span>Select a pawn</span>
+            ) : null}
           </div>
         </>
       ) : (
         <>
           <div className="h-8 w-full flex justify-start mb-3">
-            {selectedPawn && currentPlayer === Player.PlayerTwo && (
+            {selectedPawn && currentPlayer === Player.PlayerTwo ? (
               <PawnSelected player={currentPlayer} selectedPawn={selectedPawn} />
-            )}
+            ) : // Very ugly but much profit
+            currentPlayer === Player.PlayerTwo ? (
+              <span>Select a pawn</span>
+            ) : null}
           </div>
           <div className="flex items-center justify-between">
             <PawnSelection
