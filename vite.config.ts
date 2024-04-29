@@ -12,13 +12,14 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       workbox: {
+        globPatterns: ['**/*'],
         clientsClaim: true,
         skipWaiting: true,
       },
       devOptions: {
         enabled: true,
       },
-      includeAssets: ['logo192.png', 'logo512.png'],
+      includeAssets: ['**/*'],
       manifest: {
         short_name: 'PawnsBooper',
         name: 'PawnsBooper',
@@ -35,9 +36,11 @@ export default defineConfig({
           },
         ],
         start_url: '/',
+        scope: '/',
         display: 'standalone',
         theme_color: '#000000',
         background_color: '#FFFFFF',
+        description: 'PawnsBooper',
       },
     }),
   ],
