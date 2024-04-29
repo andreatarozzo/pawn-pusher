@@ -235,7 +235,6 @@ export class GameState implements IGameState {
 
     const currentCellNeighbors = this.gameBoard.getCell(pawnCol, pawnCol)?.scanNeighbors();
     for (const directionKey in currentCellNeighbors!) {
-      console.log(directionKey);
       const boopResult = this.gameBoard.boopPawn(
         pawnRow,
         pawnCol,
