@@ -2,6 +2,7 @@ import {
   AvailablePawns,
   BoopResult,
   Coordinate,
+  DirectionKey,
   GameAction,
   GameLog,
   IGameState,
@@ -206,8 +207,12 @@ export class GameState implements IGameState {
    */
   checkWinCondition(pawnRow: number, pawnCol: number, player?: Player): Player | null {
     const targetPlayer = player || this.currentPlayer;
-    for (const directionKey of this.gameBoard.directionsList) {
-      if (this.gameBoard.hasPlayerWon(pawnRow, pawnCol, directionKey, targetPlayer)) {
+
+    const currentCellNeighbors = this.gameBoard.getCell(pawnCol, pawnCol)?.scanNeighbors();
+    for (const directionKey in currentCellNeighbors!) {
+      if (
+        this.gameBoard.hasPlayerWon(pawnRow, pawnCol, directionKey as DirectionKey, targetPlayer)
+      ) {
         this.winner = targetPlayer;
         this.addGameLogToHistory({ action: GameAction.PlayerWin, player: targetPlayer });
         return this.winner;
@@ -228,8 +233,15 @@ export class GameState implements IGameState {
     const opponent = targetPlayer === Player.PlayerOne ? Player.PlayerTwo : Player.PlayerOne;
     const result: BoopResult[] = [];
 
-    for (const directionKey of this.gameBoard.directionsList) {
-      const boopResult = this.gameBoard.boopPawn(pawnRow, pawnCol, directionKey, targetPlayer);
+    const currentCellNeighbors = this.gameBoard.getCell(pawnCol, pawnCol)?.scanNeighbors();
+    for (const directionKey in currentCellNeighbors!) {
+      console.log(directionKey);
+      const boopResult = this.gameBoard.boopPawn(
+        pawnRow,
+        pawnCol,
+        directionKey as DirectionKey,
+        targetPlayer,
+      );
 
       // If there is a boop result then it means that a pawn has been booped
       if (boopResult) {
@@ -286,11 +298,12 @@ export class GameState implements IGameState {
     const targetPlayer = player || this.currentPlayer;
     let promotedPawnOrigin: Coordinate[] = [];
 
-    for (const directionKey of this.gameBoard.directionsList) {
+    const currentCellNeighbors = this.gameBoard.getCell(pawnCol, pawnCol)?.scanNeighbors();
+    for (const directionKey in currentCellNeighbors!) {
       const promotionResult = this.gameBoard.promoteKittens(
         pawnRow,
         pawnCol,
-        directionKey,
+        directionKey as DirectionKey,
         targetPlayer,
       );
 
