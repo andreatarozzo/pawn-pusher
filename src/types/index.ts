@@ -1,4 +1,4 @@
-import { GameBoard, BoardCell } from '@/utils';
+import { GameBoard, BoardCell, BaseBoard } from '@/utils';
 
 export enum BoardSize {
   Rows = 6,
@@ -66,6 +66,7 @@ export interface IBoardCell {
 
   getNeighbor: (directionKey: DirectionKey) => BoardCell | null;
   setNeighbor: (directionKey: DirectionKey, boardCell: BoardCell | null) => void;
+  init: (gameBoard: BaseBoard) => BoardCell;
   scanNeighbors: () => Partial<NeighborCells>;
 }
 
@@ -73,6 +74,7 @@ export interface IGameState {
   gameBoard: GameBoard;
   currentPlayer: Player;
   gameHistory: GameLog[];
+  gameTurn: number;
   winner: Player | null;
   readonly pawnsCoordinates: PawnLocations;
   readonly availablePawns: AvailablePawns;
@@ -165,6 +167,7 @@ export type BoopResult = {
 export type GameLog = {
   action: GameAction;
   player: Player;
+  gameTurn?: number;
   opponent?: Player;
   pawnType?: PawnType;
   originCoordinates?: Coordinate | Coordinate[];
@@ -172,7 +175,7 @@ export type GameLog = {
 };
 
 export enum GameAction {
-  GameStart = 'Game Start',
+  GameStart = 'GameStart',
   CurrentPlayerChanged = 'CurrentPlayerChanged',
   PawnPlaced = 'PawnPlaced',
   PawnBumped = 'PawnBumped',

@@ -17,6 +17,7 @@ export class GameState implements IGameState {
   gameBoard: GameBoard;
   currentPlayer: Player = Player.PlayerOne;
   gameHistory: GameLog[] = [];
+  gameTurn: number;
   winner: Player | null = null;
   readonly pawnsCoordinates: PawnLocations = {
     [Player.PlayerOne]: {
@@ -43,12 +44,18 @@ export class GameState implements IGameState {
   // Depending on action required instead of tightly coupling a gameBoard object with a gameState object
 
   // TODO: 2 - Thinking about replacing params in methods with params object
-  constructor(gameBoard: GameBoard, currentPlayer?: Player, availablePawns?: AvailablePawns) {
+  constructor(
+    gameBoard: GameBoard,
+    currentPlayer?: Player,
+    availablePawns?: AvailablePawns,
+    gameTurn?: number,
+  ) {
     this.gameBoard = gameBoard;
     if (currentPlayer && availablePawns) {
       this.currentPlayer = currentPlayer;
       this.availablePawns = availablePawns;
     }
+    this.gameTurn = gameTurn || 1;
     this.addGameLogToHistory({ action: GameAction.GameStart, player: this.currentPlayer });
   }
 
@@ -63,6 +70,7 @@ export class GameState implements IGameState {
       action: GameAction.CurrentPlayerChanged,
       player: this.currentPlayer,
     });
+    this.gameTurn += 1;
     return this.currentPlayer;
   }
 
@@ -99,6 +107,7 @@ export class GameState implements IGameState {
       action: params.action,
       player: targetPlayer,
       opponent: targetPlayer === Player.PlayerOne ? Player.PlayerTwo : Player.PlayerOne,
+      gameTurn: params.gameTurn || this.gameTurn,
       pawnType: params.pawnType,
       originCoordinates: params.originCoordinates,
       destinationCoordinates: params.destinationCoordinates,

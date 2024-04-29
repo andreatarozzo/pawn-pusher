@@ -11,127 +11,111 @@ interface LogProps {
 }
 
 const Log: FC<LogProps> = ({ gameLog }) => {
+  // TODO: These elements need for sure some reworking. Their structure and styling is meh
   switch (gameLog.action) {
     case GameAction.GameStart:
       return (
         <div>
-          <span>
-            Game started
-            <strong
-              className={[
-                'mx-2',
-                gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
-              ].join(' ')}
-            >
-              Player {gameLog.player}
-            </strong>
-            choose your pawn
-          </span>
+          Game started{' '}
+          <strong
+            className={[
+              'mx-1',
+              gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
+            ].join(' ')}
+          >
+            Player {gameLog.player}
+          </strong>{' '}
+          choose your pawn
         </div>
       );
     case GameAction.CurrentPlayerChanged:
       return (
         <div>
-          <span
+          <strong
             className={[
-              'font-bold mr-2',
+              'mr-1',
               gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
             ].join(' ')}
           >
-            <strong>Player {gameLog.player}</strong>
-          </span>
-          <span>choose your pawn</span>
+            Player {gameLog.player}
+          </strong>{' '}
+          choose your pawn
         </div>
       );
     case GameAction.PawnPlaced:
       return (
         <div>
-          <span
+          <strong
             className={[
-              'font-bold mr-2',
+              'mr-1',
               gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
             ].join(' ')}
           >
-            <strong>Player {gameLog.player}</strong>
-          </span>
-          <span>
-            has placed a<strong className="mx-2">{gameLog.pawnType}</strong>
-          </span>
-          <span>
-            at
-            <strong className="ml-2">{JSON.stringify(gameLog?.originCoordinates)}</strong>
-          </span>
+            Player {gameLog.player}
+          </strong>{' '}
+          has placed a <strong className="mx-1">{gameLog.pawnType}</strong> at{' '}
+          <strong className="ml-1">{JSON.stringify(gameLog?.originCoordinates)}</strong>
         </div>
       );
     case GameAction.PawnBumped:
       return (
         <div>
-          <span
+          <strong
             className={[
-              'font-bold mr-2',
+              'mr-1',
               gameLog.opponent === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
             ].join(' ')}
           >
-            <strong>Player {gameLog.opponent}</strong>
-          </span>
-          <span>
-            has bumped a
-            <strong
-              className={[
-                'mx-2',
-                gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
-              ].join(' ')}
-            >
-              {gameLog.pawnType}
-            </strong>
-          </span>
-          <span>
-            from
-            <strong className="mx-2">{JSON.stringify(gameLog?.originCoordinates)}</strong>
-            to
-            <strong className="mx-2">{JSON.stringify(gameLog?.destinationCoordinates)}</strong>
-          </span>
+            Player {gameLog.opponent}
+          </strong>{' '}
+          has bumped a{' '}
+          <strong
+            className={[
+              'mx-1',
+              gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
+            ].join(' ')}
+          >
+            {gameLog.pawnType}
+          </strong>{' '}
+          from <strong className="mx-1">{JSON.stringify(gameLog?.originCoordinates)}</strong> to{' '}
+          <strong className="mx-1">{JSON.stringify(gameLog?.destinationCoordinates)}</strong>
         </div>
       );
     case GameAction.PawnBumpedOutOfBoundaries:
       return (
         <div>
-          <span
+          <strong
             className={[
-              'font-bold mr-2',
+              'mr-1',
               gameLog.opponent === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
             ].join(' ')}
           >
-            <strong>Player {gameLog.opponent}</strong>
-          </span>
-          <span>
-            has bumped a
-            <strong
-              className={[
-                'mx-2',
-                gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
-              ].join(' ')}
-            >
-              {gameLog.pawnType}
-            </strong>
-            outside the {`board's`} boundaries
-          </span>
+            Player {gameLog.opponent}
+          </strong>{' '}
+          has bumped a{' '}
+          <strong
+            className={[
+              'mx-1',
+              gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
+            ].join(' ')}
+          >
+            {gameLog.pawnType}
+          </strong>{' '}
+          outside the {`board's`} boundaries
         </div>
       );
     case GameAction.PawnsPromoted:
       return (
         <div>
-          <span
+          <strong
             className={[
-              'font-bold mr-2',
+              'mr-1',
               gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
             ].join(' ')}
           >
-            <strong>Player {gameLog.player}</strong>
-          </span>
-          <span>
-            has promoted the<strong className="ml-2">{PawnType.Kitten}s</strong>
-          </span>
+            Player {gameLog.player}
+          </strong>{' '}
+          has promoted the <strong className="ml-2">{PawnType.Kitten}s</strong>{' '}
           <strong className="ml-2">
             at
             <span className="mx-2">{JSON.stringify(gameLog?.originCoordinates?.[0])}</span>
@@ -143,44 +127,46 @@ const Log: FC<LogProps> = ({ gameLog }) => {
     case GameAction.PawnAwarded:
       return (
         <div>
-          <span
+          <strong
             className={[
-              'font-bold mr-2',
+              'mr-1',
               gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
             ].join(' ')}
           >
-            <strong>Player {gameLog.player}</strong>
-          </span>
-          <span>
-            has been awarded a<strong className="mx-2">{PawnType.Cat}</strong>pawn
-          </span>
+            Player {gameLog.player}
+          </strong>{' '}
+          has been awarded a <strong className="mx-1">{PawnType.Cat}</strong> pawn
         </div>
       );
     case GameAction.PlayerWin:
       return (
         <div>
-          <span
+          <strong
             className={[
-              'font-bold mr-2',
+              'mr-1',
               gameLog.player === Player.PlayerOne ? 'text-player-one' : 'text-player-two',
             ].join(' ')}
           >
-            <strong>Player {gameLog.player}</strong>
-          </span>
-          <span>has won the game!</span>
+            Player {gameLog.player}
+          </strong>{' '}
+          has won the game!
         </div>
       );
   }
 };
 
+[];
+
 export const GameHistory: FC<GameHistoryProps> = ({ gameHistory, className }) => {
   const logsContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (logsContainerRef.current) {
-      logsContainerRef.current.children[
-        logsContainerRef.current.children.length - 1
-      ].scrollIntoView({
+    if (
+      logsContainerRef.current &&
+      logsContainerRef.current.children.length > 0 &&
+      gameHistory.length > 0
+    ) {
+      logsContainerRef.current.lastElementChild?.scrollIntoView({
         behavior: 'smooth',
         block: 'end',
         inline: 'nearest',
@@ -193,10 +179,11 @@ export const GameHistory: FC<GameHistoryProps> = ({ gameHistory, className }) =>
       <div className="font-bold">Game History</div>
       <div
         ref={logsContainerRef}
+        data-testid="game-history-logs-container"
         className="mt-7 h-[390px] text-xs overflow-y-auto overflow-x-hidden scrollbar scrollbar-thumb-scrollbar-background"
       >
         {gameHistory.map((gameLog: GameLog) => (
-          <Log gameLog={gameLog} />
+          <Log key={`${gameLog.action}-${gameLog.gameTurn}`} gameLog={gameLog} />
         ))}
       </div>
     </div>

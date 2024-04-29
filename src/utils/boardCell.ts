@@ -58,7 +58,7 @@ export class BoardCell implements IBoardCell {
    * Init the cell by setting the pointers to all neighbor cells
    * @param board
    */
-  init(board: BaseBoard) {
+  init(board: BaseBoard): BoardCell {
     Object.entries(board.directionAdjustments).forEach(([directionKey, directionAdjustment]) => {
       const [newRow, newCol] = board.getAdjustedCoordinates(
         this.row,
@@ -70,5 +70,6 @@ export class BoardCell implements IBoardCell {
         !board.isCoordinateOutOfBoundaries(newRow, newCol) ? board.getCell(newRow, newCol) : null,
       );
     });
+    return this;
   }
 }
