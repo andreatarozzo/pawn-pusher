@@ -85,7 +85,7 @@ const PawnSelected: FC<PawnSelectedProps> = ({ player, selectedPawn, className }
       <img
         alt={`selected ${player === Player.PlayerOne ? 'blue' : 'orange'} ${selectedPawn}`}
         className="h-8 w-8 ml-2 cursor-pointer"
-        src={`/${selectedPawn}-${player === Player.PlayerOne ? 'blue' : 'orange'}.png`}
+        src={`/${selectedPawn.toLocaleLowerCase()}-${player === Player.PlayerOne ? 'blue' : 'orange'}.png`}
       />
     </div>
   );
