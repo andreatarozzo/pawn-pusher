@@ -20,8 +20,8 @@ export const Cell: FC<BoardCellProps> = ({ boardCell, onCellClick }) => {
           className="h-16 w-16 mt-2"
           src={
             boardCell.value.player === Player.PlayerOne
-              ? `public/${boardCell.value.type.toLocaleLowerCase()}-blue.png`
-              : `public/${boardCell.value.type.toLocaleLowerCase()}-orange.png`
+              ? `/${boardCell.value.type.toLocaleLowerCase()}-blue.png`
+              : `/${boardCell.value.type.toLocaleLowerCase()}-orange.png`
           }
         />
       ) : null}
