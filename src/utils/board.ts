@@ -184,16 +184,21 @@ export class GameBoard extends BaseBoard implements IBoard {
     player: Player,
   ): boolean {
     if (this.isCoordinateOutOfBoundaries(pawnCol, pawnCol)) return false;
-
+    const newPawn = this.getCell(pawnRow, pawnCol);
+    const cellBehindCurrent = newPawn?.getNeighbor(this.getOppositeDirection(directionKey));
     const neighbor = this.getCell(pawnRow, pawnCol)?.getNeighbor(directionKey);
     const cellBehindNeighbor = neighbor?.getNeighbor(directionKey);
+
     return Boolean(
       neighbor &&
         neighbor.value?.player === player &&
         neighbor.value?.type === PawnType.Cat &&
-        cellBehindNeighbor &&
-        cellBehindNeighbor.value?.player === player &&
-        cellBehindNeighbor.value?.type === PawnType.Cat,
+        ((cellBehindNeighbor &&
+          cellBehindNeighbor.value?.player === player &&
+          cellBehindNeighbor.value?.type === PawnType.Cat) ||
+          (cellBehindCurrent &&
+            cellBehindCurrent.value?.player === player &&
+            cellBehindCurrent.value?.type === PawnType.Cat)),
     );
   }
 

@@ -130,7 +130,7 @@ describe('GameState', () => {
       const gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
 
       gameState.registerPawn(1, 1, PawnType.Kitten);
-      gameState.removePawnCoordinate(1, 1, Player.PlayerOne);
+      gameState.removePawnCoordinate(1, 1, PawnType.Kitten, Player.PlayerOne);
       expect(gameState.pawnsCoordinates[Player.PlayerOne]).toStrictEqual([]);
     });
 
@@ -138,7 +138,7 @@ describe('GameState', () => {
       const gameState = new GameState(new GameBoard(BoardSize.Rows, BoardSize.Cols));
 
       gameState.registerPawn(1, 1, PawnType.Kitten);
-      gameState.removePawnCoordinate(1, 1, Player.PlayerOne);
+      gameState.removePawnCoordinate(1, 1, PawnType.Kitten, Player.PlayerOne);
       expect(gameState.pawnsCoordinates[Player.PlayerOne]).toStrictEqual([]);
     });
   });
