@@ -23,7 +23,7 @@ function App() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full p-10">
       <BoardContainer
         gameState={gameState}
         onGameWonHandler={(winner: Player) => onGameWonHandler(winner)}
