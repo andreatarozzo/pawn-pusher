@@ -17,7 +17,7 @@ export const Cell: FC<BoardCellProps> = ({ boardCell, onCellClick }) => {
     >
       {boardCell.value ? (
         <img
-          alt={`${boardCell.value.player === Player.PlayerOne ? 'blue' : 'orange'} kitten`}
+          alt={`player ${boardCell.value.player} ${boardCell.value.player === Player.PlayerOne ? 'blue' : 'orange'} ${boardCell.value.type}`}
           className="h-16 w-16 mt-2"
           src={
             boardCell.value.player === Player.PlayerOne
