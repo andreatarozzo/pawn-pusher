@@ -13,6 +13,7 @@ export const Cell: FC<BoardCellProps> = ({ boardCell, onCellClick }) => {
     <button
       onClick={() => onCellClick(boardCell)}
       className="h-16 w-16 content-center not-first:border-l cursor-pointer"
+      data-testid={`board-cell-${boardCell.row}-${boardCell.col}`}
     >
       {boardCell.value ? (
         <img
