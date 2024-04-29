@@ -1,12 +1,18 @@
 import { BoardSize, PawnType, Player } from '@/types';
 import { GameBoard, GameState } from '@/utils';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import userEvent from '@testing-library/user-event';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PlayerSummary } from './PlayerSummary';
 
 describe('PlayerSummary', () => {
-  const gameBoard: GameBoard = new GameBoard(BoardSize.Rows, BoardSize.Cols);
-  const gameState: GameState = new GameState(gameBoard);
+  let gameBoard: GameBoard;
+  let gameState: GameState;
+
+  beforeEach(() => {
+    gameBoard = new GameBoard(BoardSize.Rows, BoardSize.Cols);
+    gameState = new GameState(gameBoard);
+  });
 
   it('Should render the correct elements for player 1', () => {
     render(
@@ -133,5 +139,55 @@ describe('PlayerSummary', () => {
         .item(0)
         ?.getAttribute('selected player 2 orange cat'),
     );
+  });
+
+  it('Should not trigger the onPawnSelected if the player have 0 pawn available', async () => {
+    const user = userEvent.setup();
+    const onPawnSelected = vi.fn();
+    gameState.removePawnFromAvailablePlayerPawns(PawnType.Kitten, 8);
+    render(
+      <PlayerSummary
+        player={Player.PlayerOne}
+        availablePawns={gameState.availablePawns}
+        currentPlayer={Player.PlayerOne}
+        selectedPawn={null}
+        onPawnSelected={onPawnSelected}
+      />,
+    );
+
+    const pawnSelectionButtons = screen.getAllByRole('button');
+
+    await user.click(pawnSelectionButtons[0]);
+    expect(onPawnSelected).toHaveBeenCalledTimes(0);
+
+    await user.click(pawnSelectionButtons[1]);
+    expect(onPawnSelected).toBeCalledTimes(0);
+  });
+
+  it('Should trigger the onPawnSelected method when a pawn is selected', async () => {
+    const user = userEvent.setup();
+    const onPawnSelected = vi.fn();
+    gameState.addPawnToAvailablePlayerPawns(PawnType.Cat);
+    render(
+      <PlayerSummary
+        player={Player.PlayerOne}
+        availablePawns={gameState.availablePawns}
+        currentPlayer={Player.PlayerOne}
+        selectedPawn={null}
+        onPawnSelected={onPawnSelected}
+      />,
+    );
+
+    const pawnSelectionButtons = screen.getAllByRole('button');
+
+    await user.click(pawnSelectionButtons[0]);
+
+    expect(onPawnSelected).toHaveBeenCalledTimes(1);
+    expect(onPawnSelected).toHaveBeenCalledWith(Player.PlayerOne, PawnType.Kitten);
+
+    await user.click(pawnSelectionButtons[1]);
+
+    expect(onPawnSelected).toBeCalledTimes(2);
+    expect(onPawnSelected).toHaveBeenCalledWith(Player.PlayerOne, PawnType.Cat);
   });
 });
