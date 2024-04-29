@@ -1,4 +1,4 @@
-import { Player } from '@/types';
+import { PawnType, Player } from '@/types';
 import { BoardCell } from '@/utils';
 import { FC, ReactNode } from 'react';
 
@@ -18,7 +18,9 @@ export const Cell: FC<BoardCellProps> = ({ boardCell, onCellClick }) => {
       {boardCell.value ? (
         <img
           alt={`player ${boardCell.value.player} ${boardCell.value.player === Player.PlayerOne ? 'blue' : 'orange'} ${boardCell.value.type}`}
-          className="h-16 w-16 mt-2"
+          className={['h-16 w-16', boardCell.value.type === PawnType.Kitten ? 'mt-2' : 'mt-1'].join(
+            ' ',
+          )}
           src={
             boardCell.value.player === Player.PlayerOne
               ? `/${boardCell.value.type.toLocaleLowerCase()}-blue.png`
