@@ -112,7 +112,7 @@ describe('GameState', () => {
 
       const registerPawnResult = gameState.registerPawn(1, 1, PawnType.Kitten);
       expect(registerPawnResult).toBe(true);
-      expect(gameState.pawnsCoordinates[Player.PlayerOne]).toStrictEqual([[1, 1]]);
+      expect(gameState.pawnsCoordinates[Player.PlayerOne][PawnType.Kitten]).toStrictEqual([[1, 1]]);
       expect(gameState.availablePawns[Player.PlayerOne][PawnType.Kitten]).toBe(7);
     });
 
@@ -121,7 +121,7 @@ describe('GameState', () => {
 
       const registerPawnResult = gameState.registerPawn(1, 1, PawnType.Cat);
       expect(registerPawnResult).toBe(false);
-      expect(gameState.pawnsCoordinates[Player.PlayerOne]).toStrictEqual([]);
+      expect(gameState.pawnsCoordinates[Player.PlayerOne][PawnType.Cat]).toStrictEqual([]);
     });
   });
 
@@ -131,7 +131,7 @@ describe('GameState', () => {
 
       gameState.registerPawn(1, 1, PawnType.Kitten);
       gameState.removePawnCoordinate(1, 1, PawnType.Kitten, Player.PlayerOne);
-      expect(gameState.pawnsCoordinates[Player.PlayerOne]).toStrictEqual([]);
+      expect(gameState.pawnsCoordinates[Player.PlayerOne][PawnType.Kitten]).toStrictEqual([]);
     });
 
     it('Should remove the provided pawn coordinates from the pawns coordinate list associated with the target player', () => {
@@ -139,7 +139,7 @@ describe('GameState', () => {
 
       gameState.registerPawn(1, 1, PawnType.Kitten);
       gameState.removePawnCoordinate(1, 1, PawnType.Kitten, Player.PlayerOne);
-      expect(gameState.pawnsCoordinates[Player.PlayerOne]).toStrictEqual([]);
+      expect(gameState.pawnsCoordinates[Player.PlayerOne][PawnType.Kitten]).toStrictEqual([]);
     });
   });
 
@@ -192,6 +192,7 @@ describe('GameState', () => {
       expect(gameState.boopScan(0, 1)).toStrictEqual([
         {
           type: PawnType.Kitten,
+          player: Player.PlayerTwo,
           pawnBoopedOriginCell: [1, 1],
           pawnBoopedDestinationCell: [2, 1],
         },

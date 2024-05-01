@@ -262,6 +262,7 @@ describe('Board', () => {
         pawnBoopedDestinationCell: [3, 1],
         pawnBoopedOriginCell: [2, 1],
         type: PawnType.Kitten,
+        player: Player.PlayerTwo,
       });
       expect(board.getCell(1, 1)!.value).toStrictEqual(playerOnePawn);
       expect(board.getCell(2, 1)!.value).toStrictEqual(null);
