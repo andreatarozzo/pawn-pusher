@@ -1,30 +1,29 @@
-# React + TypeScript + Vite
+# PawnPusher
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Disclaimer
 
-Currently, two official plugins are available:
+I have found a board game that I liked and have "reproduced" it in code :D.
+This is to be considered just a personal project and there is no intention to monetize/commercialize this game. <br>
+I intentionally didn't add any license for this repo to avoid potential issues related with the board game IP. <br>
+If the owner of the IP finds this repo in violation of their rules I'm more than happy to take this repo down.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## How to install - Docker
 
-## Expanding the ESLint configuration
+- Install Docker
+- Build the image using the follow command in terminal `docker build -t pawnpusher .`
+- Spin up a container using the image just created `docker run -p 4173:4173 pawnpusher`
+- Enjoy the game
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+This game has also a PWA configuration so if you want, the first time you run in through docker, you can install it directly in your Desktop and keep playing it without the fuss of docker.
+Just click on the install button on the right side of your browser search bar.
 
-- Configure the top-level `parserOptions` property like this:
+![pwa-install](/docs/pwa-install.png)
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## How to install - node
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- Install node v20
+- Install yarn
+- In your terminal navigate to the game folder
+- Run `yarn install`
+- Run `yarn build`
+- Run `yarn preview`
