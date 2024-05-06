@@ -1,5 +1,7 @@
 # PawnPusher
 
+![pwa-install](/docs/game-pic.png)
+
 ## Disclaimer
 
 I have found a board game that I liked and have "reproduced" it in code :D.
